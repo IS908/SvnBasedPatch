@@ -127,7 +127,7 @@
     </dependencies>
 
     <build>
-        <finalName>modelbank-patchTool</finalName>
+        <finalName>svn-patchTool</finalName>
         <sourceDirectory>src/main/java</sourceDirectory>
         <resources>
             <!-- 控制资源文件的拷贝 -->
@@ -174,7 +174,7 @@
                     <archive>
                         <!-- 清单文件 -->
                         <manifest>
-                            <mainClass>com.dcits.modelbank.Main</mainClass>
+                            <mainClass>com.dcits.patchtools.svn.Main</mainClass>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
                         </manifest>

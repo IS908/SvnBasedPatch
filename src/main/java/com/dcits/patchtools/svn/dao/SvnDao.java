@@ -67,6 +67,7 @@ public class SvnDao {
         return logEntryList;
     }
 
+    @Deprecated //该部分逻辑处理及fileBlame转化放在service层
     public Map<String, List<CommitModel>> filterCommitHistory() throws Exception {
         // 过滤条件
         final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -98,9 +99,9 @@ public class SvnDao {
                         }
                     }
 
-                    public void fillResult(SVNLogEntry svnlogentry) {
+                    void fillResult(SVNLogEntry svnlogentry) {
                         //getChangedPaths为提交的历史记录MAP key为文件名，value为文件详情
-                        CommitModel commit = new CommitModel();
+                        /*CommitModel commit = new CommitModel();
                         commit.setAuthor(svnlogentry.getAuthor());
                         commit.setTimestamp(svnlogentry.getDate().toString());
                         commit.setDesc(svnlogentry.getMessage());
@@ -118,14 +119,14 @@ public class SvnDao {
                             CommitModel model = new CommitModel(commit);
                             model.setType(String.valueOf(entry.getType()));
                             blameList.add(model);
-                        }
+                        }*/
                     }
                 });
         return history;
     }
 
 
-    public static void main(String[] args) throws Exception {
+    /*public static void main(String[] args) throws Exception {
         String url = "file:///D:/MyWorkSpace/chongqing/svn_repo";
         SvnDao svnDao = new SvnDao(url);
         Map<String, List<CommitModel>> history =svnDao.filterCommitHistory();
@@ -136,5 +137,5 @@ public class SvnDao {
             logger.info("ValueList:" + entry.getValue());
         }
         logger.info("history:" + history.toString());
-    }
+    }*/
 }

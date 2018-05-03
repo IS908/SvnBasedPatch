@@ -14,4 +14,13 @@
     <bean id="yamlUtil" class="com.dcits.patchtools.svn.util.YamlUtil">
 
     </bean>
+
+    <bean id="svnDao" class="com.dcits.patchtools.svn.dao.SvnDao">
+        <constructor-arg name="svnUrl" value="file:///D:/MyWorkSpace/chongqing/svn_repo"/>
+    </bean>
+    <bean id="pathRuleService" class="com.dcits.patchtools.svn.service.impl.DefaultPathRuleService"/>
+    <bean id="svnService" class="com.dcits.patchtools.svn.service.impl.SvnServiceImpl">
+        <property name="svnDao" ref="svnDao"/>
+        <property name="abstractPathRuleService" ref="pathRuleService"/>
+    </bean>
 </beans>

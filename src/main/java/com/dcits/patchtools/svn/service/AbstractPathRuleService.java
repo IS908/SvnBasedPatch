@@ -1,10 +1,10 @@
 package com.dcits.patchtools.svn.service;
 
 import com.dcits.patchtools.svn.model.FileBlame;
-import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.Map;
@@ -15,8 +15,9 @@ import java.util.Map;
  * @desc
  * @email chenkunh@dcits.com
  */
-public abstract class PathRuleService {
-    private static final Logger logger = LoggerFactory.getLogger(PathRuleService.class);
+@Component
+public abstract class AbstractPathRuleService {
+    private static final Logger logger = LoggerFactory.getLogger(AbstractPathRuleService.class);
 
     @Resource
     @Setter protected Map<String, Object> map;

@@ -1,7 +1,7 @@
 package com.dcits.patchtools.svn.service.impl;
 
 import com.dcits.patchtools.svn.model.FileBlame;
-import com.dcits.patchtools.svn.service.PathRuleService;
+import com.dcits.patchtools.svn.service.AbstractPathRuleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,8 +13,8 @@ import java.util.Map;
  * @desc
  * @email chenkunh@dcits.com
  */
-public class PathRuleServiceImpl extends PathRuleService {
-    private static final Logger logger = LoggerFactory.getLogger(PathRuleServiceImpl.class);
+public class DefaultPathRuleService extends AbstractPathRuleService {
+    private static final Logger logger = LoggerFactory.getLogger(DefaultPathRuleService.class);
 
     @Override
     protected boolean pathExcludeFilter(String path) {
