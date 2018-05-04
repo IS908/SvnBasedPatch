@@ -26,9 +26,15 @@ pathExclued:
   specific:
   contains:
     - /src/test/
-    - /src/test222
   perfix:
   surfix:
+    - .xls
+    - .xlsx
+    - .doc
+    - .docx
+    - .md
+    - .log
+    - .iml
 
 # 仅在增量清单中体现，不进入增量部署包
 listOnly:
@@ -36,5 +42,7 @@ listOnly:
   contains:
   prefix:
   surfix:
+    - .sh
+    - .bat
 
 

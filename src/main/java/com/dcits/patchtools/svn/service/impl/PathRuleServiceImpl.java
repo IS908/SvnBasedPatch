@@ -12,10 +12,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author Kevin
@@ -85,6 +82,7 @@ public class PathRuleServiceImpl implements PathRuleService, InitializingBean, D
 
     /**
      * 路径规则过滤
+     *
      * @param path
      * @param map
      * @return

@@ -7,6 +7,7 @@ import com.dcits.patchtools.svn.model.LogInfo;
 import com.dcits.patchtools.svn.service.PatchService;
 import com.dcits.patchtools.svn.service.PathRuleService;
 import com.dcits.patchtools.svn.service.SvnService;
+import com.dcits.patchtools.svn.util.ExcelUtil;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
@@ -90,30 +91,16 @@ public class PatchServiceImpl implements PatchService {
             System.out.println(fb.getModelPath() + ", ");
             System.out.println(fb.getCommits());
         }
-        System.out.println("送测清单：");
-        Iterator<Map.Entry<LogInfo, Set<String>>> it = logInfoMap.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<LogInfo, Set<String>> entry = it.next();
-            LogInfo tmp = entry.getKey();
-            Set<String> set = entry.getValue();
-            System.out.println("提交注释：" + tmp.getCommitInfo());
-            System.out.println("提交人：" + tmp.getAuthor() + ", 时间：" + tmp.getTimestamp());
-            System.out.println("文件清单：" + set);
-        }
-        // ===================== 测试输出 ===================
+        logger.info("开始生成送测清单...");
+        String dir = System.getProperty("user.dir");
+        System.out.println(dir);
+        ExcelUtil.genExcel(logInfoMap, dir);
         return true;
     }
 
     @Override
     public boolean executePatch(String xmlFile) {
-
+        // todo: 进行增量抽取
         return true;
-    }
-
-    public static void main(String[] args) {
-        String test = "abcd.efgh.ijklm";
-        System.out.println(test.substring(test.lastIndexOf('.')));
-        String[] strs = test.split("\\.");
-        System.out.println(strs[strs.length - 1]);
     }
 }
