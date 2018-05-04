@@ -26,7 +26,7 @@ public class FileBlame {
     /**
      * 源文件打包后所在包路径
      */
-    private String modelPath;
+    private String module;
     /**
      * 源文件打包后的包内路径
      */

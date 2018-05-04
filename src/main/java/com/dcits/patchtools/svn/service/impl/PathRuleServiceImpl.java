@@ -62,6 +62,8 @@ public class PathRuleServiceImpl implements PathRuleService, InitializingBean, D
     public void pathConvert(FileBlame fileBlame) {
         if (Objects.equals(null, pathConvertMap)) return;
         // todo: 进行路径转化，填充model、pkgPath相关信息
+        fileBlame.setPkgPath(fileBlame.getSrcPath());
+        fileBlame.setModule(fileBlame.getSrcPath());
         Object obj = pathConvertMap.get("specific");
         if (!Objects.equals(null, obj)) {
 

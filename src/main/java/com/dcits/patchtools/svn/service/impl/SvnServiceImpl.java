@@ -13,6 +13,7 @@ import org.tmatesoft.svn.core.SVNLogEntry;
 import org.tmatesoft.svn.core.SVNLogEntryPath;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -48,10 +49,11 @@ public class SvnServiceImpl implements SvnService {
      */
     private void svnLogEntry2FileBlame(final Map<String,
             List<FileModel>> historyMap, List<SVNLogEntry> historyList) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
         for (SVNLogEntry logEntry : historyList) {
             FileModel commit = new FileModel();
             commit.setAuthor(logEntry.getAuthor());
-            commit.setTimestamp(logEntry.getDate().toString());
+            commit.setTimestamp(sdf.format(logEntry.getDate()));
             commit.setDesc(logEntry.getMessage());
 
             Map<String, SVNLogEntryPath> changedFilePath = logEntry.getChangedPaths();

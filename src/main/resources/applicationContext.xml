@@ -15,8 +15,6 @@
     <bean id="yamlMap" class="org.springframework.beans.factory.config.YamlMapFactoryBean">
         <property name="resources" value="classpath*:patchRule.yml"/>
     </bean>
-
-
     <bean id="svnDao" class="com.dcits.patchtools.svn.dao.SvnDao">
         <constructor-arg name="svnUrl" value="${svn.url}"/>
     </bean>

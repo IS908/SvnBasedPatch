@@ -18,8 +18,7 @@ pathConvert:
     .jar: /lib
   # 后缀路径匹配
   surfix:
-    - ModelBank1/SmartEnsemble
-    - ModelBank2/SmartEnsemble
+    - ModelBank/SmartEnsemble
 
 # 要过滤掉的路径
 pathExclued:
@@ -35,6 +34,8 @@ pathExclued:
     - .md
     - .log
     - .iml
+    - .classpath
+    - .project
 
 # 仅在增量清单中体现，不进入增量部署包
 listOnly:

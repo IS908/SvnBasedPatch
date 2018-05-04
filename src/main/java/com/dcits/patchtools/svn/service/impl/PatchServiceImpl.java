@@ -1,6 +1,5 @@
 package com.dcits.patchtools.svn.service.impl;
 
-import com.dcits.patchtools.svn.model.ConfModel;
 import com.dcits.patchtools.svn.model.FileBlame;
 import com.dcits.patchtools.svn.model.FileModel;
 import com.dcits.patchtools.svn.model.LogInfo;
@@ -8,6 +7,7 @@ import com.dcits.patchtools.svn.service.PatchService;
 import com.dcits.patchtools.svn.service.PathRuleService;
 import com.dcits.patchtools.svn.service.SvnService;
 import com.dcits.patchtools.svn.util.ExcelUtil;
+import com.dcits.patchtools.svn.util.XmlUtil;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
@@ -83,18 +83,10 @@ public class PatchServiceImpl implements PatchService {
         }
 
         // ===================== 测试输出 ===================
-        System.out.println("增量清单：");
-        for (FileBlame fb : fileBlameList) {
-            System.out.println(fb.getSrcPath() + ", ");
-            System.out.print(fb.getFileType() + ", ");
-            System.out.print(fb.getPkgPath() + ", ");
-            System.out.println(fb.getModelPath() + ", ");
-            System.out.println(fb.getCommits());
-        }
+        logger.info("开始生成增量清单...");
+        XmlUtil.entity2XmlFile(fileBlameList);
         logger.info("开始生成送测清单...");
-        String dir = System.getProperty("user.dir");
-        System.out.println(dir);
-        ExcelUtil.genExcel(logInfoMap, dir);
+        ExcelUtil.genExcel(logInfoMap, System.getProperty("user.dir"));
         return true;
     }
 
