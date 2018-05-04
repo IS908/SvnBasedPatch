@@ -18,13 +18,15 @@ pathConvert:
     .jar: /lib
   # 后缀路径匹配
   surfix:
-    - ModelBank/SmartEnsemble
+    - ModelBank1/SmartEnsemble
+    - ModelBank2
 
 # 要过滤掉的路径
 pathExclued:
   particular:
   contains:
     - /src/test/
+    - /src/test/222
   perfix:
   surfix:
 

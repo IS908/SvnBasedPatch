@@ -1,7 +1,7 @@
 package com.dcits.patchtools.svn.service.impl;
 
 import com.dcits.patchtools.svn.TestBase;
-import com.dcits.patchtools.svn.model.CommitModel;
+import com.dcits.patchtools.svn.model.FileModel;
 import com.dcits.patchtools.svn.service.SvnService;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -23,12 +23,12 @@ public class SvnServiceImplTest extends TestBase {
     @Test
     public void getAllCommitHistory() {
         SvnService svnService = context.getBean(SvnServiceImpl.class);
-        final Map<String, List<CommitModel>> historyMap = svnService.getAllCommitHistory();
-        Iterator<Map.Entry<String, List<CommitModel>>> iterator = historyMap.entrySet().iterator();
+        final Map<String, List<FileModel>> historyMap = svnService.getAllCommitHistory();
+        Iterator<Map.Entry<String, List<FileModel>>> iterator = historyMap.entrySet().iterator();
         while (iterator.hasNext()) {
-            Map.Entry<String, List<CommitModel>> entry = iterator.next();
+            Map.Entry<String, List<FileModel>> entry = iterator.next();
             String key = entry.getKey();
-            List<CommitModel> value = entry.getValue();
+            List<FileModel> value = entry.getValue();
             logger.info(key + "======" + value.toString());
         }
     }

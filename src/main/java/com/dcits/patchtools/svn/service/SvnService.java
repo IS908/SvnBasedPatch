@@ -1,7 +1,6 @@
 package com.dcits.patchtools.svn.service;
 
-import com.dcits.patchtools.svn.model.CommitModel;
-import com.dcits.patchtools.svn.model.FileBlame;
+import com.dcits.patchtools.svn.model.FileModel;
 
 import java.util.List;
 import java.util.Map;
@@ -18,5 +17,5 @@ public interface SvnService {
      * 获取SVN提交记录
      * @return
      */
-    Map<String, List<CommitModel>> getAllCommitHistory();
+    Map<String, List<FileModel>> getAllCommitHistory();
 }

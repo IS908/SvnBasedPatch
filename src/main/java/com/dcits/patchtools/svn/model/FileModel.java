@@ -1,5 +1,6 @@
 package com.dcits.patchtools.svn.model;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -12,16 +13,21 @@ import java.util.Objects;
  * @email chenkunh@dcits.com
  * @date 2018-04-26 16:27.
  */
-@Setter @Getter @ToString
-public class CommitModel {
-    public CommitModel(){}
-
-    public CommitModel(CommitModel commitModel) {
-        this.setAuthor(commitModel.getAuthor());
-        this.setTimestamp(commitModel.getTimestamp());
-        this.setDesc(commitModel.getDesc());
-        this.setType(Objects.equals(null, commitModel.getType())?"":commitModel.getType());
+@Setter
+@Getter
+@ToString
+@EqualsAndHashCode
+public class FileModel {
+    public FileModel() {
     }
+
+    public FileModel(FileModel fileModel) {
+        this.setAuthor(fileModel.getAuthor());
+        this.setTimestamp(fileModel.getTimestamp());
+        this.setDesc(fileModel.getDesc());
+        this.setType(Objects.equals(null, fileModel.getType()) ? "" : fileModel.getType());
+    }
+
     /**
      * 记录提交者
      */
@@ -35,7 +41,7 @@ public class CommitModel {
      */
     private String desc;
     /**
-     * 本次提交文件类型
+     * 文件变动类型
      */
     private String type;
 }

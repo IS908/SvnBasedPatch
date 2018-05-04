@@ -9,18 +9,21 @@
 
     <!--引入配置属性文件 -->
     <context:property-placeholder location="classpath*:svn.properties"/>
-    <context:component-scan base-package="com.dcits.patchtools"/>
+    <context:component-scan base-package="com.dcits.patchtools.svn"/>
 
-    <bean id="yamlUtil" class="com.dcits.patchtools.svn.util.YamlUtil">
-
+    <!-- 加载规则文件 -->
+    <bean id="yamlMap" class="org.springframework.beans.factory.config.YamlMapFactoryBean">
+        <property name="resources" value="classpath*:patchRule.yml"/>
     </bean>
+
 
     <bean id="svnDao" class="com.dcits.patchtools.svn.dao.SvnDao">
-        <constructor-arg name="svnUrl" value="file:///D:/MyWorkSpace/chongqing/svn_repo"/>
+        <constructor-arg name="svnUrl" value="${svn.url}"/>
     </bean>
-    <bean id="pathRuleService" class="com.dcits.patchtools.svn.service.impl.DefaultPathRuleService"/>
+    <!--<bean id="pathRuleService" class="com.dcits.patchtools.svn.service.impl.PathRuleServiceImpl">
+        <property name="yamlMap" ref="yamlMap"/>
+    </bean>-->
     <bean id="svnService" class="com.dcits.patchtools.svn.service.impl.SvnServiceImpl">
         <property name="svnDao" ref="svnDao"/>
-        <property name="abstractPathRuleService" ref="pathRuleService"/>
     </bean>
 </beans>

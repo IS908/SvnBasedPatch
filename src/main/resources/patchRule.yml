@@ -8,7 +8,7 @@
 # 匹配路径并转换
 pathConvert:
   # 匹配具体文件
-  particular:
+  specific: abc
   # 包含路径匹配
   contains:
     /modelBank-all-integration/src/main/config/: /src/main/config/
@@ -18,19 +18,21 @@ pathConvert:
     .jar: /lib
   # 后缀路径匹配
   surfix:
-    - ModelBank/SmartEnsemble
+    - ModelBank1/SmartEnsemble
+    - ModelBank2/SmartEnsemble
 
 # 要过滤掉的路径
 pathExclued:
-  particular:
+  specific:
   contains:
     - /src/test/
+    - /src/test222
   perfix:
   surfix:
 
 # 仅在增量清单中体现，不进入增量部署包
 listOnly:
-  particular:
+  specific:
   contains:
   prefix:
   surfix:

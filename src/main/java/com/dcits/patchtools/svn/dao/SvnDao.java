@@ -1,9 +1,8 @@
 package com.dcits.patchtools.svn.dao;
 
-import com.dcits.patchtools.svn.model.CommitModel;
+import com.dcits.patchtools.svn.model.FileModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 import org.tmatesoft.svn.core.*;
 import org.tmatesoft.svn.core.auth.ISVNAuthenticationManager;
 import org.tmatesoft.svn.core.internal.io.dav.DAVRepositoryFactory;
@@ -22,7 +21,6 @@ import java.util.*;
  * @email chenkunh@dcits.com
  * @date 2018-04-25 21:32.
  */
-@Component
 public class SvnDao {
     private static final Logger logger = LoggerFactory.getLogger(SvnDao.class);
 
@@ -67,75 +65,4 @@ public class SvnDao {
         return logEntryList;
     }
 
-    @Deprecated //该部分逻辑处理及fileBlame转化放在service层
-    public Map<String, List<CommitModel>> filterCommitHistory() throws Exception {
-        // 过滤条件
-        final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        final Date begin = format.parse("2018-04-13");
-        final Date end = format.parse("2018-05-14");
-        final String author = "";
-
-        final Map<String, List<CommitModel>> history = new HashMap<>();
-//        List<String> history = new ArrayList<>();
-        //String[] 为过滤的文件路径前缀，为空表示不进行过滤
-        repository.log(new String[]{""},
-                0, -1,
-                true, true,
-                new ISVNLogEntryHandler() {
-                    @Override
-                    public void handleLogEntry(SVNLogEntry svnlogentry)
-                            throws SVNException {
-                        //依据提交时间进行过滤
-                        if (svnlogentry.getDate().after(begin)
-                                && svnlogentry.getDate().before(end)) {
-                            // 依据提交人过滤
-                            if (!"".equals(author)) {
-                                if (author.equals(svnlogentry.getAuthor())) {
-                                    fillResult(svnlogentry);
-                                }
-                            } else {
-                                fillResult(svnlogentry);
-                            }
-                        }
-                    }
-
-                    void fillResult(SVNLogEntry svnlogentry) {
-                        //getChangedPaths为提交的历史记录MAP key为文件名，value为文件详情
-                        /*CommitModel commit = new CommitModel();
-                        commit.setAuthor(svnlogentry.getAuthor());
-                        commit.setTimestamp(svnlogentry.getDate().toString());
-                        commit.setDesc(svnlogentry.getMessage());
-
-
-                        Map<String, SVNLogEntryPath> changedFilePath = svnlogentry.getChangedPaths();
-                        Iterator<Map.Entry<String, SVNLogEntryPath>> iterator = changedFilePath.entrySet().iterator();
-                        while (iterator.hasNext()) {
-                            SVNLogEntryPath entry = iterator.next().getValue();
-                            List<CommitModel> blameList = history.get(entry.getPath());
-                            if (Objects.equals(null, blameList)) {
-                                blameList = new ArrayList<>();
-                                history.put(entry.getPath(), blameList);
-                            }
-                            CommitModel model = new CommitModel(commit);
-                            model.setType(String.valueOf(entry.getType()));
-                            blameList.add(model);
-                        }*/
-                    }
-                });
-        return history;
-    }
-
-
-    /*public static void main(String[] args) throws Exception {
-        String url = "file:///D:/MyWorkSpace/chongqing/svn_repo";
-        SvnDao svnDao = new SvnDao(url);
-        Map<String, List<CommitModel>> history =svnDao.filterCommitHistory();
-        Iterator<Map.Entry<String, List<CommitModel>>> entryIterator = history.entrySet().iterator();
-        while (entryIterator.hasNext()) {
-            Map.Entry<String, List<CommitModel>> entry = entryIterator.next();
-            logger.info("=============================Key:" + entry.getKey());
-            logger.info("ValueList:" + entry.getValue());
-        }
-        logger.info("history:" + history.toString());
-    }*/
 }

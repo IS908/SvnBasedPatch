@@ -1,5 +1,6 @@
 package com.dcits.patchtools.svn;
 
+import com.dcits.patchtools.svn.util.SpringApplicationContext;
 import org.junit.Before;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -15,5 +16,7 @@ public class TestBase {
     @Before
     public void loadSpringApplicationContext() {
         this.context = new ClassPathXmlApplicationContext("classpath*:applicationContext.xml");
+        SpringApplicationContext applicationContext = new SpringApplicationContext();
+        applicationContext.setApplicationContext(context);
     }
 }
