@@ -77,6 +77,8 @@ public class PatchServiceImpl implements PatchService {
             String[] strs = srcPath.split("\\.");
             fileBlame.setFileType(strs[strs.length - 1]);
 
+            // todo: 第一次填充module和pkgPath
+
             pathRuleService.pathConvert(fileBlame);
 
             fileBlameList.add(fileBlame);

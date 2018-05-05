@@ -26,7 +26,7 @@ pathExclued:
   specific:
   contains:
     - /src/test/
-  perfix:
+  prefix:
   surfix:
     - .xls
     - .xlsx

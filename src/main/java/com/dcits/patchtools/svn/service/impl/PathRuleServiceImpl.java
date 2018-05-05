@@ -61,24 +61,68 @@ public class PathRuleServiceImpl implements PathRuleService, InitializingBean, D
     @Override
     public void pathConvert(FileBlame fileBlame) {
         if (Objects.equals(null, pathConvertMap)) return;
-        // todo: 进行路径转化，填充model、pkgPath相关信息
+        // todo: 进行路径转化，填充module、pkgPath相关信息
         fileBlame.setPkgPath(fileBlame.getSrcPath());
         fileBlame.setModule(fileBlame.getSrcPath());
-        Object obj = pathConvertMap.get("specific");
-        if (!Objects.equals(null, obj)) {
-
-        }
-        obj = pathConvertMap.get("contains");
-        if (!Objects.equals(null, obj)) {
-
-        }
-        obj = pathConvertMap.get("perfix");
-        if (!Objects.equals(null, obj)) {
-
+        Object obj = pathConvertMap.get("contains");
+        if (obj instanceof Map) {
+            Map<String, String> containsMap = (Map) obj;
+            Iterator<Map.Entry<String, String>> iterator = containsMap.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<String, String> entry = iterator.next();
+                String key = entry.getKey();
+                if (fileBlame.getSrcPath().contains(key)) {
+                    String module = fileBlame.getModule();
+                    fileBlame.setModule(entry.getValue() +
+                            (Objects.equals(null, module) ? "" : module));
+                    return;
+                }
+            }
         }
         obj = pathConvertMap.get("surfix");
-        if (!Objects.equals(null, obj)) {
-
+        if (obj instanceof Map) {
+            Map<String, String> surfixMap = (Map) obj;
+            Iterator<Map.Entry<String, String>> iterator = surfixMap.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<String, String> entry = iterator.next();
+                String key = entry.getKey();
+                if (fileBlame.getSrcPath().endsWith(key)) {
+                    String module = fileBlame.getModule();
+                    fileBlame.setModule(entry.getValue() +
+                            (Objects.equals(null, module) ? "" : module));
+                    return;
+                }
+            }
+        }
+        obj = pathConvertMap.get("prefix");
+        if (obj instanceof Map) {
+            Map<String, String> prefixMap = (Map) obj;
+            Iterator<Map.Entry<String, String>> iterator = prefixMap.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<String, String> entry = iterator.next();
+                String key = entry.getKey();
+                if (fileBlame.getSrcPath().startsWith(key)) {
+                    String module = fileBlame.getModule();
+                    fileBlame.setModule(entry.getValue() +
+                            (Objects.equals(null, module) ? "" : module));
+                    return;
+                }
+            }
+        }
+        obj = pathConvertMap.get("specific");
+        if (obj instanceof Map) {
+            Map<String, String> specificMap = (Map) obj;
+            Iterator<Map.Entry<String, String>> iterator = specificMap.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<String, String> entry = iterator.next();
+                String key = entry.getKey();
+                if (fileBlame.getSrcPath().equals(key)) {
+                    String module = fileBlame.getModule();
+                    fileBlame.setModule(entry.getValue() +
+                            (Objects.equals(null, module) ? "" : module));
+                    return;
+                }
+            }
         }
     }
 
@@ -91,32 +135,32 @@ public class PathRuleServiceImpl implements PathRuleService, InitializingBean, D
      */
     private boolean pathFilter(String path, Map<String, Object> map) {
         if (Objects.equals(null, map)) return false;
-        Object obj = map.get("specific");
-        if (!Objects.equals(null, obj) && obj instanceof List) {
-            List<String> specificList = (ArrayList) obj;
-            for (String specific : specificList) {
-                if (path.endsWith(specific)) return true;
-            }
-        }
-        obj = map.get("contains");
-        if (!Objects.equals(null, obj) && obj instanceof List) {
+        Object obj = map.get("contains");
+        if (obj instanceof List) {
             List<String> containsList = (ArrayList) obj;
             for (String match : containsList) {
                 if (path.contains(match)) return true;
             }
         }
-        obj = map.get("perfix");
-        if (!Objects.equals(null, obj) && obj instanceof List) {
-            List<String> perfixList = (ArrayList) obj;
-            for (String perfix : perfixList) {
-                if (path.startsWith(perfix)) return true;
-            }
-        }
         obj = map.get("surfix");
-        if (!Objects.equals(null, obj) && obj instanceof List) {
+        if (obj instanceof List) {
             List<String> surfixList = (ArrayList) obj;
             for (String surfix : surfixList) {
                 if (path.endsWith(surfix)) return true;
+            }
+        }
+        obj = map.get("prefix");
+        if (obj instanceof List) {
+            List<String> prefixList = (ArrayList) obj;
+            for (String prefix : prefixList) {
+                if (path.startsWith(prefix)) return true;
+            }
+        }
+        obj = map.get("specific");
+        if (obj instanceof List) {
+            List<String> specificList = (ArrayList) obj;
+            for (String specific : specificList) {
+                if (path.equals(specific)) return true;
             }
         }
         return false;
