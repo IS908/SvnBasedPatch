@@ -40,9 +40,9 @@ public class SvnServiceImpl implements SvnService {
     }
 
     @Override
-    public Map<String, List<FileModel>> getAllCommitHistory(boolean excludeDir) {
+    public Map<String, List<FileModel>> getAllCommitHistory(long versionFrom, long versionTo, boolean excludeDir) {
         final Map<String, List<FileModel>> historyMap = new HashMap<>();
-        List<SVNLogEntry> historyList = this.svnDao.getAllCommitHistory();
+        List<SVNLogEntry> historyList = this.svnDao.getAllCommitHistory(versionFrom, versionTo);
         this.svnLogEntry2FileBlame(historyMap, historyList, excludeDir);
         return historyMap;
     }

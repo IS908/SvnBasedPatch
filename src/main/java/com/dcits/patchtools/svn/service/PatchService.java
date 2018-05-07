@@ -16,7 +16,7 @@ public interface PatchService {
      * 根据增量记录生成增量描述文件
      * @return
      */
-    boolean genPatchListAndReport();
+    boolean genPatchListAndReport(long versionFrom, long versionTo, String baseDir);
 
     /**
      * 进行增量抽取生成增量部署包

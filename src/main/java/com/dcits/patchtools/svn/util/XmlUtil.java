@@ -95,7 +95,9 @@ public class XmlUtil {
 
         // 生成文件路径及文件名
         String runDate = DateUtil.getRunDate();
-        String fileName = path + "/" + runDate + "patchList.xml";
+        path = path.endsWith(File.separator) ? path : path + File.separator;
+        String fileName = path + runDate + "patchList.xml";
+        logger.info(fileName);
 
         // 开始写入到文件
         try (FileOutputStream fos = new FileOutputStream(fileName)) {

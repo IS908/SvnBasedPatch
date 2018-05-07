@@ -51,17 +51,18 @@ public class SvnDao {
      * @return
      * @throws SVNException
      */
-    public List<SVNLogEntry> getAllCommitHistory() {
-        final long[] currentVersion = {-1L};
+    public List<SVNLogEntry> getAllCommitHistory(long versionFrom, long versionTo) {
+//        final long[] currentVersion = {-1L};
         final List<SVNLogEntry> logEntryList = new ArrayList<>();
         SVNRepository repository = openReopsitory();
         try {
             repository.log(new String[]{""},
-                    0, -1, true, true,
+                    versionFrom, versionTo, true, true,
                     new ISVNLogEntryHandler() {
+
                 @Override
                 public void handleLogEntry(SVNLogEntry logEntry) throws SVNException {
-                    currentVersion[0] = Math.max(currentVersion[0], logEntry.getRevision());
+//                    currentVersion[0] = Math.max(currentVersion[0], logEntry.getRevision());
                     logEntryList.add(logEntry);
                 }
             });

@@ -8,6 +8,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -36,7 +37,8 @@ public class ExcelUtil {
 
         //存储路径--获取桌面位置
         //存储Excel的路径
-        String path = dir + "/送测清单-" + date + ".xlsx";
+        dir = dir.endsWith(File.separator) ? dir : (dir + File.separator);
+        String path = dir + "送测清单-" + date + ".xlsx";
         logger.info(path);
         try {
             // 创建工作薄
