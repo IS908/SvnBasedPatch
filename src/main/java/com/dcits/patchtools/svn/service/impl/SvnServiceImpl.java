@@ -8,10 +8,12 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNLogEntry;
 import org.tmatesoft.svn.core.SVNLogEntryPath;
 
 import javax.annotation.Resource;
+import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -29,6 +31,12 @@ public class SvnServiceImpl implements SvnService {
     @Setter
     @Getter
     private SvnDao svnDao;
+
+    @Override
+    public ByteArrayOutputStream getFileFromSVN(String svnUrl) throws SVNException {
+        ByteArrayOutputStream baos = svnDao.getFileFromSVN(svnUrl);
+        return baos;
+    }
 
     @Override
     public Map<String, List<FileModel>> getAllCommitHistory() {

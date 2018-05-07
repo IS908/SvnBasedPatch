@@ -14,8 +14,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.tmatesoft.svn.core.SVNException;
 
 import javax.annotation.Resource;
+import java.io.ByteArrayOutputStream;
 import java.util.*;
 
 /**
@@ -29,15 +31,20 @@ public class PatchServiceImpl implements PatchService {
     private static final Logger logger = LoggerFactory.getLogger(PatchServiceImpl.class);
 
     @Resource
-    @Setter @Getter
+    @Setter
+    @Getter
     private PathRuleService pathRuleService;
     @Resource
-    @Setter @Getter
+    @Setter
+    @Getter
     private SvnService svnService;
 
     @Value("${patch.xml.dir}")
-    @Setter @Getter
+    @Setter
+    @Getter
     private String xmlPath;
+
+    private static final String SRC_MAIN = "/src/main/";
 
     @Override
     public boolean genPatchListAndReport() {
@@ -46,6 +53,8 @@ public class PatchServiceImpl implements PatchService {
         List<FileBlame> fileBlameList = new ArrayList<>();
         // 用于生成增量清单
         Map<LogInfo, Set<String>> logInfoMap = new HashMap<>();
+        // 用于存放pom到jar包的映射关系，减少与SVN服务端的交互
+        Map<String, String> moduleMap = new HashMap<>();
         LogInfo logInfo = new LogInfo();
         Map<String, List<FileModel>> logMap = svnService.getAllCommitHistory();
         Iterator<Map.Entry<String, List<FileModel>>> iterator = logMap.entrySet().iterator();
@@ -60,7 +69,7 @@ public class PatchServiceImpl implements PatchService {
                 logInfo.setCommitInfo(fileModel.getDesc());
                 logInfo.setAuthor(fileModel.getAuthor());
                 logInfo.setTimestamp(fileModel.getTimestamp());
-                Set<String> fileSet =  logInfoMap.get(logInfo);
+                Set<String> fileSet = logInfoMap.get(logInfo);
                 if (Objects.equals(null, fileSet)) {
                     fileSet = new HashSet<>();
                     LogInfo tmp = new LogInfo(logInfo);
@@ -78,7 +87,12 @@ public class PatchServiceImpl implements PatchService {
             String[] strs = srcPath.split("\\.");
             fileBlame.setFileType(strs[strs.length - 1]);
 
-            // todo: 第一次填充module和pkgPath
+            // 第一次填充module和pkgPath
+            fillPomContent(fileBlame.getSrcPath(), moduleMap, fileBlame);
+            if (fileBlame.getSrcPath().contains(SRC_MAIN)) {
+                String[] paths = fileBlame.getSrcPath().split(SRC_MAIN);
+                fileBlame.setPkgPath(paths[paths.length - 1]);
+            }
 
             pathRuleService.pathConvert(fileBlame);
 
@@ -93,9 +107,50 @@ public class PatchServiceImpl implements PatchService {
         return true;
     }
 
+    /**
+     * 获取并解析POM文件，填充module和pkgPath值
+     *
+     * @param srcPath
+     * @param moduleMap
+     * @param fileBlame
+     */
+    private void fillPomContent(String srcPath,
+                                Map<String, String> moduleMap,
+                                FileBlame fileBlame) {
+        if (!srcPath.contains(SRC_MAIN)) return;
+        String[] pathSplit = srcPath.split(SRC_MAIN);
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < pathSplit.length - 1; i++) {
+            sb.append(pathSplit[i]);
+            sb.append(SRC_MAIN);
+        }
+        String pomPath = sb.toString();
+        pomPath = pomPath.substring(0, pomPath.length() - SRC_MAIN.length()) + "/pom.xml";
+        String moduleName = moduleMap.get(pomPath);
+        if (!Objects.equals(null, moduleName)) {
+            fileBlame.setModule(moduleName);
+            return;
+        }
+        try {
+            ByteArrayOutputStream baos = svnService.getFileFromSVN(pomPath);
+            moduleName = XmlUtil.pom2PackageName(baos);
+            fileBlame.setModule(moduleName);
+            moduleMap.put(pomPath, moduleName);
+        } catch (SVNException e) {
+            logger.warn(e.getErrorMessage().getFullMessage());
+            fillPomContent(pomPath, moduleMap, fileBlame);
+        }
+    }
+
     @Override
     public boolean executePatch(String xmlFile) {
         // todo: 进行增量抽取
         return true;
+    }
+
+    public static void main(String[] args) {
+        String sb = "abcdefghijklmn";
+        String mn = "mn";
+        System.out.println(sb.substring(0, sb.length() - mn.length()));
     }
 }

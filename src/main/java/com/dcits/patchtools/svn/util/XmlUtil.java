@@ -12,9 +12,7 @@ import org.dom4j.io.XMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -119,6 +117,41 @@ public class XmlUtil {
      */
     public static String pom2PackageName(String pomPath) {
         Document document = xmlReader(pomPath);
+        return XmlUtil.pom2PackageName(document);
+    }
+
+    /**
+     * 读取pom文件获得该pom文件对应的打包后的文件名
+     *
+     * @param baos pom文件内容
+     * @return 打包后的包名
+     */
+    public static String pom2PackageName(ByteArrayOutputStream baos) {
+        String pkgName = null;
+        ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+        SAXReader reader = new SAXReader();
+        reader.setEncoding("utf-8");
+        try {
+            Document document = reader.read(bais);
+            pkgName = pom2PackageName(document);
+            baos.close();
+        } catch (DocumentException e) {
+            logger.error(e.getMessage());
+            e.printStackTrace();
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+            e.printStackTrace();
+        }
+        return pkgName;
+    }
+
+    /**
+     * pom文件解析
+     *
+     * @param document
+     * @return
+     */
+    private static String pom2PackageName(Document document) {
         Element root = document.getRootElement();
 
         Element packaging = root.element("packaging");
@@ -148,7 +181,8 @@ public class XmlUtil {
             reader.setEncoding("utf-8");
             document = reader.read(file);
         } catch (DocumentException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
+//            e.printStackTrace();
         }
         return document;
     }

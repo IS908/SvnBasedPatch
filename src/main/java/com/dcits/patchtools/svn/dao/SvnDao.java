@@ -4,7 +4,10 @@ import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tmatesoft.svn.core.*;
+import org.tmatesoft.svn.core.ISVNLogEntryHandler;
+import org.tmatesoft.svn.core.SVNException;
+import org.tmatesoft.svn.core.SVNLogEntry;
+import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.auth.ISVNAuthenticationManager;
 import org.tmatesoft.svn.core.internal.io.fs.FSRepositoryFactory;
 import org.tmatesoft.svn.core.internal.io.svn.SVNRepositoryFactoryImpl;
@@ -44,7 +47,7 @@ public class SvnDao {
      * @return
      * @throws SVNException
      */
-    public List<SVNLogEntry> getAllCommitHistory()  {
+    public List<SVNLogEntry> getAllCommitHistory() {
         final long[] currentVersion = {-1L};
         final List<SVNLogEntry> logEntryList = new ArrayList<>();
         SVNRepository repository = openReopsitory();
@@ -75,14 +78,10 @@ public class SvnDao {
      */
     public ByteArrayOutputStream getFileFromSVN(String svnFile) throws SVNException {
         SVNRepository repository = openReopsitory();
-        long lastVersion = repository.getLatestRevision();
-        SVNProperties svnProperties = new SVNProperties();
+//        SVNProperties svnProperties = new SVNProperties();
         ByteArrayOutputStream os = new ByteArrayOutputStream();
-        try {
-            repository.getFile(svnFile, lastVersion, svnProperties, os);
-        } catch (SVNException e) {
-            logger.info(e.getErrorMessage().getFullMessage());
-        }
+        long lastVersion = repository.getLatestRevision();
+        repository.getFile(svnFile, lastVersion, null, os);
         return os;
     }
 
@@ -108,6 +107,13 @@ public class SvnDao {
                 SVNWCUtil.createDefaultAuthenticationManager(user, pwd);
         repository.setAuthenticationManager(authManager);
         return repository;
+    }
+
+    public static void main(String[] args) throws SVNException {
+        SvnDao svnDao = new SvnDao();
+        svnDao.setSvnUrl("file:///D:/MyWorkSpace/chongqing/svn_repo");
+        ByteArrayOutputStream byteArrayOutputStream = svnDao.getFileFromSVN("/log/2002-2502--20180325SmartEnsembleCheckList.xml");
+        System.out.println(byteArrayOutputStream.toString());
     }
 
 }
