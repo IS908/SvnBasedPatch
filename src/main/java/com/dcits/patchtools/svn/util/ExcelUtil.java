@@ -28,18 +28,18 @@ public class ExcelUtil {
     /**
      * 生成送测清单
      * @param map
-     * @param dir
+     * @param path
      */
-    public static void genExcel(Map<LogInfo, Set<String>> map, String dir) {
+    public static void genExcel(Map<LogInfo, Set<String>> map, String path, String patchFlag) {
         //获取当前时间
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
         String date = df.format(new Date());
 
         //存储路径--获取桌面位置
         //存储Excel的路径
-        dir = dir.endsWith(File.separator) ? dir : (dir + File.separator);
-        String path = dir + "送测清单-" + date + ".xlsx";
-        logger.info(path);
+        path = path.endsWith(File.separator) ? path : (path + File.separator);
+        String excelName = path + "送测清单_" + patchFlag + "_" + date + ".xlsx";
+        logger.info(excelName);
         try {
             // 创建工作薄
             XSSFWorkbook wb = new XSSFWorkbook();
@@ -50,7 +50,7 @@ public class ExcelUtil {
 
             //输出流,下载时候的位置
 //            FileWriter outputStream1 = new FileWriter(path);
-            FileOutputStream outputStream = new FileOutputStream(path);
+            FileOutputStream outputStream = new FileOutputStream(excelName);
             wb.write(outputStream);
             outputStream.flush();
             outputStream.close();

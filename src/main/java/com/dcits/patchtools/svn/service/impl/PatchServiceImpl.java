@@ -72,6 +72,8 @@ public class PatchServiceImpl implements PatchService {
             Map.Entry<String, List<FileModel>> entry = iterator.next();
             String srcPath = entry.getKey();
             List<FileModel> fileModels = entry.getValue();
+
+            // 规则：忽略文件规则执行
             if (pathRuleService.pathExcludeFilter(srcPath)) continue;
 
             // 送测清单的处理
@@ -88,6 +90,7 @@ public class PatchServiceImpl implements PatchService {
                 fileSet.add(srcPath);
             }
 
+            // 规则：仅在送测清单，不在增量包规则执行
             if (pathRuleService.pathListOnlyFilter(srcPath)) continue;
 
             // 增量描述文件的处理
@@ -107,20 +110,19 @@ public class PatchServiceImpl implements PatchService {
                 fileBlame.setPkgPath(paths[paths.length - 1]);
             }
 
+            // 规则：module值转换规则执行
             pathRuleService.pathConvert(fileBlame);
 
             fileBlameList.add(fileBlame);
         }
 
-        // ===================== 测试输出 ===================
-        String path = System.getProperty("user.dir");
-        baseDir = (Objects.equals(null, baseDir) || Objects.equals("", baseDir)) ? path : baseDir;
         baseDir = baseDir.endsWith(File.separator) ? baseDir : baseDir + (File.separator);
 
         logger.info("开始生成增量清单...");
-        XmlUtil.entity2XmlFile(fileBlameList, baseDir + xmlDir);
+        String patchFlag = versionFrom + "-" + (versionTo == -1 ? "E" : versionTo);
+        XmlUtil.entity2XmlFile(fileBlameList, baseDir + xmlDir, patchFlag);
         logger.info("开始生成送测清单...");
-        ExcelUtil.genExcel(logInfoMap, baseDir + excelDir);
+        ExcelUtil.genExcel(logInfoMap, baseDir + excelDir, patchFlag);
         return true;
     }
 

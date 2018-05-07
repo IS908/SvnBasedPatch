@@ -52,7 +52,7 @@ public class SvnDao {
      * @throws SVNException
      */
     public List<SVNLogEntry> getAllCommitHistory(long versionFrom, long versionTo) {
-//        final long[] currentVersion = {-1L};
+        final long[] currentVersion = {-1L};
         final List<SVNLogEntry> logEntryList = new ArrayList<>();
         SVNRepository repository = openReopsitory();
         try {
@@ -62,11 +62,12 @@ public class SvnDao {
 
                 @Override
                 public void handleLogEntry(SVNLogEntry logEntry) throws SVNException {
-//                    currentVersion[0] = Math.max(currentVersion[0], logEntry.getRevision());
+                    currentVersion[0] = Math.max(currentVersion[0], logEntry.getRevision());
                     logEntryList.add(logEntry);
                 }
             });
             // todo: 将最新的版本号写到md5(svnUrl)命名的文件中
+            logger.info("当前截止版本号为：" + currentVersion[0]);
         } catch (SVNException e) {
             logger.info(e.getErrorMessage().getFullMessage());
         }
