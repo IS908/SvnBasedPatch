@@ -57,7 +57,7 @@ public class XmlUtil {
      *
      * @param list FileBlame
      */
-    public static void entity2XmlFile(List<FileBlame> list, String path) {
+    public static void entity2XmlFile(List<FileBlame> list, String path, String patchFlag) {
         Document document = DocumentHelper.createDocument();
         Element rootElement = document.addElement("files");
         Element descElement = rootElement.addElement("description");
@@ -77,7 +77,7 @@ public class XmlUtil {
                 commitEle.addElement("type").setText(commit.getType());
             }
         }
-        xmlWriter(document, true, path);
+        xmlWriter(document, true, path, patchFlag);
     }
 
     /**
@@ -86,7 +86,7 @@ public class XmlUtil {
      * @param rootElement 带有信息XML的Document
      * @param format      格式化标志
      */
-    private static void xmlWriter(Document rootElement, boolean format, String path) {
+    private static void xmlWriter(Document rootElement, boolean format, String path, String patchFlag) {
         // 输入格式化 XML
         OutputFormat formater = new OutputFormat();
         formater.setIndent(format);
@@ -96,7 +96,7 @@ public class XmlUtil {
         // 生成文件路径及文件名
         String runDate = DateUtil.getRunDate();
         path = path.endsWith(File.separator) ? path : path + File.separator;
-        String fileName = path + runDate + "patchList.xml";
+        String fileName = path + runDate + "patchInfoList" + patchFlag + ".xml";
         logger.info(fileName);
 
         // 开始写入到文件
