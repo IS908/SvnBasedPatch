@@ -13,6 +13,8 @@ pathConvert:
   contains:
     /modelBank-all-integration/src/main/config/: conf/
     /modelBank-all-integration/src/main/scripts/: bin/
+    /src/main/java/: lib/
+    /src/main/resources: lib/
   # 前缀路径匹配
 #  prefix:
   # 后缀路径匹配
@@ -26,6 +28,7 @@ pathExclued:
     - /src/test/
   prefix:
   surfix:
+    - .txt
     - .xls
     - .xlsx
     - .doc
@@ -35,6 +38,10 @@ pathExclued:
     - .iml
     - .classpath
     - .project
+    - .json
+    - .trg
+    - src/main/resources
+    - src/main/java
 
 # 仅在增量清单中体现，不进入增量部署包
 listOnly:

@@ -45,6 +45,8 @@ public class PatchServiceImpl implements PatchService {
     private String xmlPath;
 
     private static final String SRC_MAIN = "/src/main/";
+    private static final String RESOURCES = SRC_MAIN + "resources/";
+    private static final String JAVA = SRC_MAIN + "java/";
 
     @Override
     public boolean genPatchListAndReport() {
@@ -89,8 +91,11 @@ public class PatchServiceImpl implements PatchService {
 
             // 第一次填充module和pkgPath
             fillPomContent(fileBlame.getSrcPath(), moduleMap, fileBlame);
-            if (fileBlame.getSrcPath().contains(SRC_MAIN)) {
-                String[] paths = fileBlame.getSrcPath().split(SRC_MAIN);
+            if (fileBlame.getSrcPath().contains(RESOURCES)) {
+                String[] paths = fileBlame.getSrcPath().split(RESOURCES);
+                fileBlame.setPkgPath(paths[paths.length - 1]);
+            } else if (fileBlame.getSrcPath().contains(JAVA)) {
+                String[] paths = fileBlame.getSrcPath().split(JAVA);
                 fileBlame.setPkgPath(paths[paths.length - 1]);
             }
 
@@ -146,11 +151,5 @@ public class PatchServiceImpl implements PatchService {
     public boolean executePatch(String xmlFile) {
         // todo: 进行增量抽取
         return true;
-    }
-
-    public static void main(String[] args) {
-        String sb = "abcdefghijklmn";
-        String mn = "mn";
-        System.out.println(sb.substring(0, sb.length() - mn.length()));
     }
 }

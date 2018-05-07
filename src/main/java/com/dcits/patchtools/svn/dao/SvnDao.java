@@ -109,11 +109,10 @@ public class SvnDao {
         return repository;
     }
 
-    public static void main(String[] args) throws SVNException {
+    /*public static void main(String[] args) throws SVNException {
         SvnDao svnDao = new SvnDao();
         svnDao.setSvnUrl("file:///D:/MyWorkSpace/chongqing/svn_repo");
         ByteArrayOutputStream byteArrayOutputStream = svnDao.getFileFromSVN("/log/2002-2502--20180325SmartEnsembleCheckList.xml");
         System.out.println(byteArrayOutputStream.toString());
-    }
-
+    }*/
 }
