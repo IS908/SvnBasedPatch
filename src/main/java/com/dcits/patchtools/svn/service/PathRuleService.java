@@ -10,6 +10,8 @@ import com.dcits.patchtools.svn.util.PatchEnum;
  * @email chenkunh@dcits.com
  */
 public interface PathRuleService {
+
+    @Deprecated
     PatchEnum excute(FileBlame fileBlame);
 
     boolean pathExcludeFilter(String path);

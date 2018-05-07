@@ -7,8 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-import org.tmatesoft.svn.core.SVNException;
+import org.springframework.stereotype.Component;
 import org.tmatesoft.svn.core.SVNLogEntry;
 import org.tmatesoft.svn.core.SVNLogEntryPath;
 
@@ -22,9 +21,11 @@ import java.util.*;
  * @desc
  * @email chenkunh@dcits.com
  */
+@Component("svnService")
 public class SvnServiceImpl implements SvnService {
     private static final Logger logger = LoggerFactory.getLogger(SvnServiceImpl.class);
 
+    @Resource
     @Setter
     @Getter
     private SvnDao svnDao;
@@ -32,12 +33,8 @@ public class SvnServiceImpl implements SvnService {
     @Override
     public Map<String, List<FileModel>> getAllCommitHistory() {
         final Map<String, List<FileModel>> historyMap = new HashMap<>();
-        try {
-            List<SVNLogEntry> historyList = this.svnDao.getAllCommitHistory();
-            this.svnLogEntry2FileBlame(historyMap, historyList);
-        } catch (SVNException e) {
-            e.printStackTrace();
-        }
+        List<SVNLogEntry> historyList = this.svnDao.getAllCommitHistory();
+        this.svnLogEntry2FileBlame(historyMap, historyList);
         return historyMap;
     }
 

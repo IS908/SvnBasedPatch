@@ -17,7 +17,7 @@ pathConvert:
 #  prefix:
   # 后缀路径匹配
   surfix:
-    .jar: /lib
+    .jar: lib/
 
 # 要过滤掉的路径
 pathExclued:

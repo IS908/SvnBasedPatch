@@ -63,7 +63,7 @@ public class XmlUtil {
         Document document = DocumentHelper.createDocument();
         Element rootElement = document.addElement("files");
         Element descElement = rootElement.addElement("description");
-        descElement.addAttribute("desc", "description");
+        descElement.addAttribute("desc", "增量描述清单");
         for (FileBlame model : list) {
             Element fileElement = rootElement.addElement("file");
             fileElement.addAttribute("srcPath", model.getSrcPath());
@@ -73,7 +73,7 @@ public class XmlUtil {
             Element commits = fileElement.addElement("commits");
             for (FileModel commit : model.getCommits()) {
                 Element commitEle = commits.addElement("commit");
-                commitEle.addElement("author").setText(commit.getAuthor());
+                commitEle.addAttribute("author", commit.getAuthor());
                 commitEle.addElement("desc").setText(commit.getDesc());
                 commitEle.addElement("timestamp").setText(commit.getTimestamp());
                 commitEle.addElement("type").setText(commit.getType());

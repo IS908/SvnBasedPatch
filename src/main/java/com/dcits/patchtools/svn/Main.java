@@ -1,19 +1,14 @@
 package com.dcits.patchtools.svn;
 
-import com.dcits.patchtools.svn.model.FileModel;
 import com.dcits.patchtools.svn.service.PatchService;
-import com.dcits.patchtools.svn.service.SvnService;
 import com.dcits.patchtools.svn.service.impl.PatchServiceImpl;
-import com.dcits.patchtools.svn.service.impl.SvnServiceImpl;
 import com.dcits.patchtools.svn.util.SpringApplicationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author Kevin
@@ -39,6 +34,12 @@ public class Main {
         PatchService patchService = SpringApplicationContext.getContext().getBean(PatchServiceImpl.class);
         patchService.genPatchListAndReport();
 
+        System.out.println();
+        Properties properties = System.getProperties();
+        System.out.println(properties.size());
+        for (Object o : properties.keySet()) {
+            System.out.println("" + o + "=" + properties.get(o));
+        }
     }
 
 }

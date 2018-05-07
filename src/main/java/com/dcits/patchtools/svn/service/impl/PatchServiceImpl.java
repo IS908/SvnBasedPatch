@@ -41,6 +41,7 @@ public class PatchServiceImpl implements PatchService {
 
     @Override
     public boolean genPatchListAndReport() {
+        System.out.println("XMLPath:" + xmlPath);
         // 用于生成增量描述文件
         List<FileBlame> fileBlameList = new ArrayList<>();
         // 用于生成增量清单

@@ -1,19 +1,21 @@
 package com.dcits.patchtools.svn.dao;
 
-import com.dcits.patchtools.svn.model.FileModel;
+import lombok.Getter;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tmatesoft.svn.core.*;
 import org.tmatesoft.svn.core.auth.ISVNAuthenticationManager;
-import org.tmatesoft.svn.core.internal.io.dav.DAVRepositoryFactory;
 import org.tmatesoft.svn.core.internal.io.fs.FSRepositoryFactory;
 import org.tmatesoft.svn.core.internal.io.svn.SVNRepositoryFactoryImpl;
 import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Kevin
@@ -24,45 +26,88 @@ import java.util.*;
 public class SvnDao {
     private static final Logger logger = LoggerFactory.getLogger(SvnDao.class);
 
-    private SVNRepository repository = null;
+    @Setter
+    @Getter
+    private String svnUrl;
+    @Setter
+    @Getter
+    private String user;
+    @Setter
+    @Getter
+    private String pwd;
 
-    public SvnDao(String svnUrl) {
-        this(svnUrl, null, null);
+    // todo：获取上一个版本号（读文件方式）
+
+    /**
+     * 获得所有的提交记录
+     *
+     * @return
+     * @throws SVNException
+     */
+    public List<SVNLogEntry> getAllCommitHistory()  {
+        final long[] currentVersion = {-1L};
+        final List<SVNLogEntry> logEntryList = new ArrayList<>();
+        SVNRepository repository = openReopsitory();
+        try {
+            repository.log(new String[]{""}, 0, -1, true, true, new ISVNLogEntryHandler() {
+
+                @Override
+                public void handleLogEntry(SVNLogEntry logEntry) throws SVNException {
+                    currentVersion[0] = Math.max(currentVersion[0], logEntry.getRevision());
+                    logEntryList.add(logEntry);
+                }
+            });
+            // todo: 将最新的版本号写到md5(svnUrl)命名的文件中
+        } catch (SVNException e) {
+            logger.info(e.getErrorMessage().getFullMessage());
+        } finally {
+            repository.closeSession();
+        }
+        return logEntryList;
     }
 
-    public SvnDao(String svnUrl, String user, String pwd) {
-        DAVRepositoryFactory.setup();
+    /**
+     * 从SVN服务器读取指定文件到本机内存
+     *
+     * @param svnFile
+     * @return
+     * @throws SVNException
+     */
+    public ByteArrayOutputStream getFileFromSVN(String svnFile) throws SVNException {
+        SVNRepository repository = openReopsitory();
+        long lastVersion = repository.getLatestRevision();
+        SVNProperties svnProperties = new SVNProperties();
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        try {
+            repository.getFile(svnFile, lastVersion, svnProperties, os);
+        } catch (SVNException e) {
+            logger.info(e.getErrorMessage().getFullMessage());
+        }
+        return os;
+    }
+
+    /**
+     * 获取SVN服务器连接句柄
+     *
+     * @return
+     */
+    private SVNRepository openReopsitory() {
         SVNRepositoryFactoryImpl.setup();
         FSRepositoryFactory.setup();
+        SVNRepository repository = null;
         try {
             repository = SVNRepositoryFactory.create(SVNURL.parseURIEncoded(svnUrl));
         } catch (SVNException e) {
             logger.error(String.valueOf(e.getErrorMessage()), e);
         }
         if (Objects.equals(null, user) && Objects.equals(null, pwd)) {
-            return;
+            return repository;
         }
         // 身份验证
         ISVNAuthenticationManager authManager =
-                SVNWCUtil.createDefaultAuthenticationManager(user,pwd);
+                SVNWCUtil.createDefaultAuthenticationManager(user, pwd);
         repository.setAuthenticationManager(authManager);
-    }
-
-    /**
-     * 获得所有的提交记录
-     * @return
-     * @throws SVNException
-     */
-    public List<SVNLogEntry> getAllCommitHistory() throws SVNException {
-        final List<SVNLogEntry> logEntryList = new ArrayList<>();
-        repository.log(new String[]{""}, 0, -1, true, true, new ISVNLogEntryHandler() {
-
-            @Override
-            public void handleLogEntry(SVNLogEntry logEntry) throws SVNException {
-                logEntryList.add(logEntry);
-            }
-        });
-        return logEntryList;
+        return repository;
     }
 
 }

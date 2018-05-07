@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -20,7 +21,7 @@ import java.util.*;
  * @desc
  * @email chenkunh@dcits.com
  */
-@Service("pathRuleService")
+@Component("pathRuleService")
 public class PathRuleServiceImpl implements PathRuleService, InitializingBean, DisposableBean {
     private static final Logger logger = LoggerFactory.getLogger(PathRuleServiceImpl.class);
 
@@ -61,9 +62,6 @@ public class PathRuleServiceImpl implements PathRuleService, InitializingBean, D
     @Override
     public void pathConvert(FileBlame fileBlame) {
         if (Objects.equals(null, pathConvertMap)) return;
-        // todo: 进行路径转化，填充module、pkgPath相关信息
-        fileBlame.setPkgPath(fileBlame.getSrcPath());
-        fileBlame.setModule(fileBlame.getSrcPath());
         Object obj = pathConvertMap.get("contains");
         if (obj instanceof Map) {
             Map<String, String> containsMap = (Map) obj;
@@ -126,6 +124,10 @@ public class PathRuleServiceImpl implements PathRuleService, InitializingBean, D
         }
     }
 
+    private void fillModuleAndPkgPath() {
+
+    }
+
     /**
      * 路径规则过滤
      *
@@ -186,6 +188,6 @@ public class PathRuleServiceImpl implements PathRuleService, InitializingBean, D
 
     @Override
     public void destroy() throws Exception {
-
+        logger.info(PathRuleServiceImpl.class.getName() + " destroy ! ");
     }
 }
