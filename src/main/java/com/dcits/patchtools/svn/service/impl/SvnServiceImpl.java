@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNLogEntry;
 import org.tmatesoft.svn.core.SVNLogEntryPath;
+import org.tmatesoft.svn.core.SVNNodeKind;
 
 import javax.annotation.Resource;
 import java.io.ByteArrayOutputStream;
@@ -39,10 +40,10 @@ public class SvnServiceImpl implements SvnService {
     }
 
     @Override
-    public Map<String, List<FileModel>> getAllCommitHistory() {
+    public Map<String, List<FileModel>> getAllCommitHistory(boolean excludeDir) {
         final Map<String, List<FileModel>> historyMap = new HashMap<>();
         List<SVNLogEntry> historyList = this.svnDao.getAllCommitHistory();
-        this.svnLogEntry2FileBlame(historyMap, historyList);
+        this.svnLogEntry2FileBlame(historyMap, historyList, excludeDir);
         return historyMap;
     }
 
@@ -53,7 +54,7 @@ public class SvnServiceImpl implements SvnService {
      * @param historyList
      */
     private void svnLogEntry2FileBlame(final Map<String,
-            List<FileModel>> historyMap, List<SVNLogEntry> historyList) {
+            List<FileModel>> historyMap, List<SVNLogEntry> historyList, boolean excludeDir) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
         for (SVNLogEntry logEntry : historyList) {
             FileModel commit = new FileModel();
@@ -66,6 +67,11 @@ public class SvnServiceImpl implements SvnService {
                     changedFilePath.entrySet().iterator();
             while (iterator.hasNext()) {
                 SVNLogEntryPath entry = iterator.next().getValue();
+                // 过滤掉目录变更记录
+                if (excludeDir && entry.getKind() == SVNNodeKind.DIR) {
+                    continue;
+                }
+
                 List<FileModel> blameList = historyMap.get(entry.getPath());
                 if (Objects.equals(null, blameList)) {
                     blameList = new ArrayList<>();

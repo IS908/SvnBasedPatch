@@ -29,19 +29,29 @@ pathExclued:
   prefix:
   surfix:
     - .txt
+    - .bak
+    - .sql
     - .xls
     - .xlsx
     - .doc
     - .docx
+    - .pdf
     - .md
     - .log
+    - .yml
     - .iml
     - .classpath
     - .project
     - .json
+    - .xmind
+    - .cdm
+    - .ftl
     - .trg
-    - src/main/resources
-    - src/main/java
+    - .er
+    - .jar
+    - .gif
+    - .jpg
+    - .png
 
 # 仅在增量清单中体现，不进入增量部署包
 listOnly:

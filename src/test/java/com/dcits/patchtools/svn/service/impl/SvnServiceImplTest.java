@@ -23,7 +23,7 @@ public class SvnServiceImplTest extends TestBase {
     @Test
     public void getAllCommitHistory() {
         SvnService svnService = context.getBean(SvnServiceImpl.class);
-        final Map<String, List<FileModel>> historyMap = svnService.getAllCommitHistory();
+        final Map<String, List<FileModel>> historyMap = svnService.getAllCommitHistory(true);
         Iterator<Map.Entry<String, List<FileModel>>> iterator = historyMap.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<String, List<FileModel>> entry = iterator.next();

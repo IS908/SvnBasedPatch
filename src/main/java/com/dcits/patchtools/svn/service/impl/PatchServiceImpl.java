@@ -42,7 +42,11 @@ public class PatchServiceImpl implements PatchService {
     @Value("${patch.xml.dir}")
     @Setter
     @Getter
-    private String xmlPath;
+    private String xmlDir;
+
+    @Value("${patch.excel.dir}")
+    @Setter @Getter
+    private String excelDir;
 
     private static final String SRC_MAIN = "/src/main/";
     private static final String RESOURCES = SRC_MAIN + "resources/";
@@ -50,7 +54,9 @@ public class PatchServiceImpl implements PatchService {
 
     @Override
     public boolean genPatchListAndReport() {
-        System.out.println("XMLPath:" + xmlPath);
+        logger.debug("XML_DIR:" + xmlDir);
+        logger.debug("EXCEL_DIR:" + excelDir);
+
         // 用于生成增量描述文件
         List<FileBlame> fileBlameList = new ArrayList<>();
         // 用于生成增量清单
@@ -58,7 +64,7 @@ public class PatchServiceImpl implements PatchService {
         // 用于存放pom到jar包的映射关系，减少与SVN服务端的交互
         Map<String, String> moduleMap = new HashMap<>();
         LogInfo logInfo = new LogInfo();
-        Map<String, List<FileModel>> logMap = svnService.getAllCommitHistory();
+        Map<String, List<FileModel>> logMap = svnService.getAllCommitHistory(true);
         Iterator<Map.Entry<String, List<FileModel>>> iterator = logMap.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<String, List<FileModel>> entry = iterator.next();

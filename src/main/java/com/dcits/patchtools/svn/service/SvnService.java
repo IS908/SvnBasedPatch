@@ -20,7 +20,7 @@ public interface SvnService {
      *
      * @return
      */
-    Map<String, List<FileModel>> getAllCommitHistory();
+    Map<String, List<FileModel>> getAllCommitHistory(boolean excludeDir);
 
     /**
      * 从SVN服务端获取指定文件的内容
