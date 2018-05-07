@@ -18,7 +18,6 @@ import java.util.Map;
  * @email chenkunh@dcits.com
  */
 public class SvnServiceImplTest extends TestBase {
-    private static final Logger logger = LoggerFactory.getLogger(SvnServiceImplTest.class);
 
     @Test
     public void getAllCommitHistory() {

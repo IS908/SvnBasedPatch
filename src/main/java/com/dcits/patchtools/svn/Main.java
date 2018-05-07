@@ -34,12 +34,12 @@ public class Main {
         PatchService patchService = SpringApplicationContext.getContext().getBean(PatchServiceImpl.class);
         patchService.genPatchListAndReport();
 
-        System.out.println();
+        /*System.out.println();
         Properties properties = System.getProperties();
         System.out.println(properties.size());
         for (Object o : properties.keySet()) {
             System.out.println("" + o + "=" + properties.get(o));
-        }
+        }*/
     }
 
 }

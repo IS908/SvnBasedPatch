@@ -14,6 +14,6 @@ public class YamlTest extends TestBase {
     @Test
     public void yamlTest() {
         YamlMapFactoryBean yamlMapFactoryBean = context.getBean(YamlMapFactoryBean.class);
-        System.out.println(yamlMapFactoryBean.getObjectType());
+        logger.info(String.valueOf(yamlMapFactoryBean.getObjectType()));
     }
 }

@@ -57,7 +57,7 @@ public class XmlUtil {
      *
      * @param list FileBlame
      */
-    public static void entity2XmlFile(List<FileBlame> list) {
+    public static void entity2XmlFile(List<FileBlame> list, String path) {
         Document document = DocumentHelper.createDocument();
         Element rootElement = document.addElement("files");
         Element descElement = rootElement.addElement("description");
@@ -77,7 +77,7 @@ public class XmlUtil {
                 commitEle.addElement("type").setText(commit.getType());
             }
         }
-        xmlWriter(document, true);
+        xmlWriter(document, true, path);
     }
 
     /**
@@ -86,7 +86,7 @@ public class XmlUtil {
      * @param rootElement 带有信息XML的Document
      * @param format      格式化标志
      */
-    private static void xmlWriter(Document rootElement, boolean format) {
+    private static void xmlWriter(Document rootElement, boolean format, String path) {
         // 输入格式化 XML
         OutputFormat formater = new OutputFormat();
         formater.setIndent(format);
@@ -95,7 +95,7 @@ public class XmlUtil {
 
         // 生成文件路径及文件名
         String runDate = DateUtil.getRunDate();
-        String fileName = System.getProperty("user.dir") + "/" + runDate + ".xml";
+        String fileName = path + "/" + runDate + "patchList.xml";
 
         // 开始写入到文件
         try (FileOutputStream fos = new FileOutputStream(fileName)) {
@@ -103,7 +103,9 @@ public class XmlUtil {
             xmlWriter.write(rootElement);
             xmlWriter.flush();
             xmlWriter.close();
+            logger.info("增量清单生成成功！");
         } catch (IOException e) {
+            logger.info("增量清单生成失败！");
             e.printStackTrace();
         }
 

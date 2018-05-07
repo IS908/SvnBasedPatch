@@ -37,7 +37,7 @@ public class ExcelUtil {
         //存储路径--获取桌面位置
         //存储Excel的路径
         String path = dir + "/送测清单-" + date + ".xlsx";
-        System.out.println(path);
+        logger.info(path);
         try {
             // 创建工作薄
             XSSFWorkbook wb = new XSSFWorkbook();

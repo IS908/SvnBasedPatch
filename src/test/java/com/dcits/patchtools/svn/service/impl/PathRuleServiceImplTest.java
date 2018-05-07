@@ -18,7 +18,7 @@ public class PathRuleServiceImplTest extends TestBase {
     public void pathExcludeFilter() {
         PathRuleService pathRuleService = context.getBean(PathRuleServiceImpl.class);
         boolean res = pathRuleService.pathExcludeFilter("abc.xls");
-        System.out.println(res);
+        logger.info(String.valueOf(res));
     }
 
     @Test

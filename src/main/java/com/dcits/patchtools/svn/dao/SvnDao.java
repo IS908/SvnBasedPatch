@@ -9,6 +9,7 @@ import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNLogEntry;
 import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.auth.ISVNAuthenticationManager;
+import org.tmatesoft.svn.core.internal.io.dav.DAVRepositoryFactory;
 import org.tmatesoft.svn.core.internal.io.fs.FSRepositoryFactory;
 import org.tmatesoft.svn.core.internal.io.svn.SVNRepositoryFactoryImpl;
 import org.tmatesoft.svn.core.io.SVNRepository;
@@ -29,6 +30,9 @@ import java.util.Objects;
 public class SvnDao {
     private static final Logger logger = LoggerFactory.getLogger(SvnDao.class);
 
+    @Setter
+    @Getter
+    private String svnBaseUrl;
     @Setter
     @Getter
     private String svnUrl;
@@ -52,8 +56,9 @@ public class SvnDao {
         final List<SVNLogEntry> logEntryList = new ArrayList<>();
         SVNRepository repository = openReopsitory();
         try {
-            repository.log(new String[]{""}, 0, -1, true, true, new ISVNLogEntryHandler() {
-
+            repository.log(new String[]{""},
+                    0, -1, true, true,
+                    new ISVNLogEntryHandler() {
                 @Override
                 public void handleLogEntry(SVNLogEntry logEntry) throws SVNException {
                     currentVersion[0] = Math.max(currentVersion[0], logEntry.getRevision());
@@ -63,8 +68,6 @@ public class SvnDao {
             // todo: 将最新的版本号写到md5(svnUrl)命名的文件中
         } catch (SVNException e) {
             logger.info(e.getErrorMessage().getFullMessage());
-        } finally {
-            repository.closeSession();
         }
         return logEntryList;
     }
@@ -81,6 +84,7 @@ public class SvnDao {
 //        SVNProperties svnProperties = new SVNProperties();
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         long lastVersion = repository.getLatestRevision();
+//        logger.info(String.valueOf(lastVersion));
         repository.getFile(svnFile, lastVersion, null, os);
         return os;
     }
@@ -91,6 +95,17 @@ public class SvnDao {
      * @return
      */
     private SVNRepository openReopsitory() {
+        return openReopsitory(svnUrl);
+    }
+
+    /**
+     * 获取SVN服务器连接句柄
+     *
+     * @param svnUrl
+     * @return
+     */
+    private SVNRepository openReopsitory(String svnUrl) {
+        DAVRepositoryFactory.setup();
         SVNRepositoryFactoryImpl.setup();
         FSRepositoryFactory.setup();
         SVNRepository repository = null;
@@ -109,10 +124,4 @@ public class SvnDao {
         return repository;
     }
 
-    /*public static void main(String[] args) throws SVNException {
-        SvnDao svnDao = new SvnDao();
-        svnDao.setSvnUrl("file:///D:/MyWorkSpace/chongqing/svn_repo");
-        ByteArrayOutputStream byteArrayOutputStream = svnDao.getFileFromSVN("/log/2002-2502--20180325SmartEnsembleCheckList.xml");
-        System.out.println(byteArrayOutputStream.toString());
-    }*/
 }

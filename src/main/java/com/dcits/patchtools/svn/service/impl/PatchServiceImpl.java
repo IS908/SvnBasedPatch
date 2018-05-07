@@ -111,10 +111,11 @@ public class PatchServiceImpl implements PatchService {
         }
 
         // ===================== 测试输出 ===================
+        String path = System.getProperty("user.dir");
         logger.info("开始生成增量清单...");
-        XmlUtil.entity2XmlFile(fileBlameList);
+        XmlUtil.entity2XmlFile(fileBlameList, path);
         logger.info("开始生成送测清单...");
-        ExcelUtil.genExcel(logInfoMap, System.getProperty("user.dir"));
+        ExcelUtil.genExcel(logInfoMap, path);
         return true;
     }
 

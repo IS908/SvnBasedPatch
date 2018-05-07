@@ -5,21 +5,21 @@
 # 1、生成增量包的同时，生成Excel的增量清单
 # 2、环境相关的文件处理：部署包中不体现，在增量清单中体现
 
-# 匹配路径并转换
+# 匹配路径并转换 匹配srcPath后，转换module路径
 pathConvert:
   # 匹配具体文件
-  specific: abc
+  specific:
   # 包含路径匹配
   contains:
-    /modelBank-all-integration/src/main/config/: /src/main/config/
-    /modelBank-all-integration/src/main/scripts/: /src/main/scripts/
+    /modelBank-all-integration/src/main/config/: conf/
+    /modelBank-all-integration/src/main/scripts/: bin/
+    /src/main/java/: lib/
+    /src/main/resources: lib/
   # 前缀路径匹配
-  prefix:
-    .jar: /lib
+#  prefix:
   # 后缀路径匹配
   surfix:
-    - ModelBank1/SmartEnsemble
-    - ModelBank2/SmartEnsemble
+    .jar: lib/
 
 # 要过滤掉的路径
 pathExclued:
@@ -28,21 +28,34 @@ pathExclued:
     - /src/test/
   prefix:
   surfix:
+    - .txt
+    - .bak
+    - .sql
     - .xls
     - .xlsx
     - .doc
     - .docx
+    - .pdf
     - .md
     - .log
+    - .yml
     - .iml
+    - .classpath
+    - .project
+    - .json
+    - .xmind
+    - .cdm
+    - .ftl
+    - .trg
+    - .er
+    - .jar
+    - .gif
+    - .jpg
+    - .png
 
 # 仅在增量清单中体现，不进入增量部署包
 listOnly:
   specific:
   contains:
   prefix:
-  surfix:
-    - .sh
-    - .bat
-
-
+  surfix: [.sh, .bat, .properties]

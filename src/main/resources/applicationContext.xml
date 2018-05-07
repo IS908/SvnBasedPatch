@@ -16,22 +16,24 @@
         <property name="resources" value="classpath*:patchRule.yml"/>
     </bean>
     <!-- 规则类加载 -->
-    <!--<bean id="pathRuleService" class="com.dcits.patchtools.svn.service.impl.PathRuleServiceImpl">
+    <bean id="pathRuleService" class="com.dcits.patchtools.svn.service.impl.PathRuleServiceImpl">
         <property name="yamlMap" ref="yamlMap"/>
-    </bean>-->
+    </bean>
 
     <!-- 以下为根据 -->
     <bean id="svnDao" class="com.dcits.patchtools.svn.dao.SvnDao">
+        <property name="svnBaseUrl" value="${svn.url.base}"/>
         <property name="svnUrl" value="${svn.url}"/>
         <property name="user" value="${svn.username}"/>
         <property name="pwd" value="${svn.password}"/>
     </bean>
-    <!--<bean id="svnService" class="com.dcits.patchtools.svn.service.impl.SvnServiceImpl">
+    <bean id="svnService" class="com.dcits.patchtools.svn.service.impl.SvnServiceImpl">
         <property name="svnDao" ref="svnDao"/>
-    </bean>-->
-    <!--<bean id="patchService" class="com.dcits.patchtools.svn.service.impl.PatchServiceImpl">
-        <property name="xmlPath" value="abc"/>
+    </bean>
+    <bean id="patchService" class="com.dcits.patchtools.svn.service.impl.PatchServiceImpl">
+        <property name="xmlDir" value="${patch.xml.dir}"/>
+        <property name="excelDir" value="${patch.excel.dir}"/>
         <property name="svnService" ref="svnService"/>
         <property name="pathRuleService" ref="pathRuleService"/>
-    </bean>-->
+    </bean>
 </beans>
