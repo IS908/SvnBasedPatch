@@ -6,6 +6,7 @@ import com.dcits.patchtools.svn.model.LogInfo;
 import com.dcits.patchtools.svn.service.PatchService;
 import com.dcits.patchtools.svn.service.PathRuleService;
 import com.dcits.patchtools.svn.service.SvnService;
+import com.dcits.patchtools.svn.util.DateUtil;
 import com.dcits.patchtools.svn.util.ExcelUtil;
 import com.dcits.patchtools.svn.util.XmlUtil;
 import lombok.Getter;
@@ -35,18 +36,17 @@ public class PatchServiceImpl implements PatchService {
     @Setter
     @Getter
     private PathRuleService pathRuleService;
+
     @Resource
     @Setter
     @Getter
     private SvnService svnService;
 
     @Value("${patch.xml.dir}")
-    @Setter
-    @Getter
     private String xmlDir;
-
+    @Value("${patch.xml.surfix}")
+    private String xmlModuleSurfix;
     @Value("${patch.excel.dir}")
-    @Setter @Getter
     private String excelDir;
 
     private static final String SRC_MAIN = "/src/main/";
@@ -54,7 +54,7 @@ public class PatchServiceImpl implements PatchService {
     private static final String JAVA = SRC_MAIN + "java/";
 
     @Override
-    public boolean genPatchListAndReport(long versionFrom, long versionTo, String baseDir) {
+    public boolean genPatchListAndReport(String baseDir, long versionFrom, long versionTo) {
         logger.debug("XML_DIR:" + xmlDir);
         logger.debug("EXCEL_DIR:" + excelDir);
 
@@ -115,21 +115,38 @@ public class PatchServiceImpl implements PatchService {
 
             fileBlameList.add(fileBlame);
         }
-
-        baseDir = baseDir.endsWith(File.separator) ? baseDir : baseDir + (File.separator);
+        String fileName = this.genFileFullPath(baseDir + xmlDir,
+                versionFrom, versionTo, xmlModuleSurfix);
 
         logger.info("开始生成增量清单...");
         String patchFlag = versionFrom + "-" + (versionTo == -1 ? "E" : versionTo);
-        XmlUtil.entity2XmlFile(fileBlameList, baseDir + xmlDir, patchFlag);
+        XmlUtil.entity2XmlFile(fileBlameList, fileName);
         logger.info("开始生成送测清单...");
         ExcelUtil.genExcel(logInfoMap, baseDir + excelDir, patchFlag);
         return true;
     }
 
     @Override
-    public boolean executePatch(String xmlFile) {
-        // todo: 进行增量抽取
-        return true;
+    public Set<String> executePatch(String baseDir, long versionFrom, long versionTo) {
+        String fileName = this.genFileFullPath(baseDir + xmlDir,
+                versionFrom, versionTo, xmlModuleSurfix);
+        return XmlUtil.patchFileReader(fileName);
+    }
+
+    /**
+     * 生成XML文件全路径
+     *
+     * @param baseDir
+     * @param versionFrom
+     * @param versionTo
+     * @return
+     */
+    private String genFileFullPath(String baseDir, long versionFrom, long versionTo, String xmlSurfix) {
+        baseDir = baseDir.endsWith(File.separator) ? baseDir : baseDir + (File.separator);
+        String runDate = DateUtil.getRunDate();
+        String patchFlag = versionFrom + "-" + (versionTo == -1 ? "E" : versionTo);
+        String fileFullName = baseDir + runDate + "_" + patchFlag + "_" + xmlSurfix + ".xml";
+        return fileFullName;
     }
 
     /**
@@ -167,12 +184,13 @@ public class PatchServiceImpl implements PatchService {
         }
     }
 
+
     public String getXmlDir() {
         return xmlDir;
     }
 
     public void setXmlDir(String xmlDir) {
-        this.xmlDir = Objects.equals("@", xmlDir) ? "/" : xmlDir;
+        this.xmlDir = Objects.equals("@", xmlDir) ? "" : xmlDir;
     }
 
     public String getExcelDir() {
@@ -180,6 +198,15 @@ public class PatchServiceImpl implements PatchService {
     }
 
     public void setExcelDir(String excelDir) {
-        this.excelDir = Objects.equals("@", excelDir) ? "/" : excelDir;
+        this.excelDir = Objects.equals("@", excelDir) ? "" : excelDir;
     }
+
+    public String getXmlModuleSurfix() {
+        return xmlModuleSurfix;
+    }
+
+    public void setXmlModuleSurfix(String xmlModuleSurfix) {
+        this.xmlModuleSurfix = xmlModuleSurfix;
+    }
+
 }

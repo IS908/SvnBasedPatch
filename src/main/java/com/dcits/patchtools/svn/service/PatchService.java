@@ -1,9 +1,6 @@
 package com.dcits.patchtools.svn.service;
 
-import com.dcits.patchtools.svn.model.FileModel;
-
-import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Kevin
@@ -12,16 +9,22 @@ import java.util.Map;
  * @email chenkunh@dcits.com
  */
 public interface PatchService {
+
     /**
      * 根据增量记录生成增量描述文件
+     * @param versionFrom
+     * @param versionTo
+     * @param baseDir
      * @return
      */
-    boolean genPatchListAndReport(long versionFrom, long versionTo, String baseDir);
+    boolean genPatchListAndReport(String baseDir, long versionFrom, long versionTo);
 
     /**
      * 进行增量抽取生成增量部署包
-     * @param xmlFile
+     * @param versionFrom
+     * @param versionTo
+     * @param baseDir
      * @return
      */
-    boolean executePatch(String xmlFile);
+    Set<String> executePatch(String baseDir, long versionFrom, long versionTo);
 }

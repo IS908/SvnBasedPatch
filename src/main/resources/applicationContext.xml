@@ -16,24 +16,41 @@
         <property name="resources" value="classpath*:patchRule.yml"/>
     </bean>
     <!-- 规则类加载 -->
-    <bean id="pathRuleService" class="com.dcits.patchtools.svn.service.impl.PathRuleServiceImpl">
+    <!--<bean id="pathRuleService" class="com.dcits.patchtools.svn.service.impl.PathRuleServiceImpl">
         <property name="yamlMap" ref="yamlMap"/>
-    </bean>
+    </bean>-->
 
     <!-- 以下为根据 -->
     <bean id="svnDao" class="com.dcits.patchtools.svn.dao.SvnDao">
-        <property name="svnBaseUrl" value="${svn.url.base}"/>
         <property name="svnUrl" value="${svn.url}"/>
         <property name="user" value="${svn.username}"/>
         <property name="pwd" value="${svn.password}"/>
     </bean>
-    <bean id="svnService" class="com.dcits.patchtools.svn.service.impl.SvnServiceImpl">
+    <!--<bean id="svnService" class="com.dcits.patchtools.svn.service.impl.SvnServiceImpl">
         <property name="svnDao" ref="svnDao"/>
-    </bean>
-    <bean id="patchService" class="com.dcits.patchtools.svn.service.impl.PatchServiceImpl">
-        <property name="xmlDir" value="${patch.xml.dir}"/>
-        <property name="excelDir" value="${patch.excel.dir}"/>
+    </bean>-->
+    <!--<bean id="patchService" class="com.dcits.patchtools.svn.service.impl.PatchServiceImpl">
         <property name="svnService" ref="svnService"/>
         <property name="pathRuleService" ref="pathRuleService"/>
+        <property name="xmlDir" value="${patch.xml.dir}"/>
+        <property name="xmlModuleSurfix" value="${patch.xml.surfix}"/>
+        <property name="excelDir" value="${patch.excel.dir}"/>
+    </bean>-->
+
+    <bean id="patchHandler" class="com.dcits.patchtools.svn.PatchHandler">
+        <property name="yamlConf" ref="yamlMap"/>
+        <property name="patchServices">
+            <list>
+                <ref bean="patchService"/>
+            </list>
+        </property>
+        <property name="yamlPath" value="${patch.yml.dir}"/>
+        <property name="yamlSurfix" value="${patch.yml.surfix}"/>
+        <property name="targetPath" value="${patch.target.dir}"/>
+        <property name="targetSrcPath" value="${patch.src.dir}"/>
+        <property name="patchTmpFolderName" value="${patch.tmp.folder.name}"/>
+        <property name="patchFolderName" value="${patch.folder.name}"/>
+        <property name="patchZipName" value="${patch.zip.name}"/>
+        <property name="delFileName" value="${deleteFile.name}"/>
     </bean>
 </beans>

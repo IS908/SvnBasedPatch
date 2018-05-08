@@ -17,7 +17,7 @@ public class PatchServiceImplTest extends TestBase {
     @Test
     public void genPatchListAndReport() {
         PatchService patchService = context.getBean(PatchServiceImpl.class);
-        patchService.genPatchListAndReport(0, -1, null);
+        patchService.genPatchListAndReport(null, 0, -1);
     }
 
     @Test

@@ -34,11 +34,11 @@ public class XmlUtil {
      *
      * @return
      */
-    public Set<String> getExtractFiles(String xmlFilePath) {
+    public static Set<String> patchFileReader(String xmlFilePath) {
         Set<String> set = new HashSet<>();
 
         String fileName = xmlFilePath;
-        logger.info("增量文件路径：" + fileName);
+        logger.info(fileName);
         Document document = xmlReader(fileName);
         Element rootElement = document.getRootElement();
 
@@ -46,9 +46,12 @@ public class XmlUtil {
         for (Iterator file = rootElement.elementIterator("file"); file.hasNext(); ) {
             fileElement = (Element) file.next();
             String packageName = fileElement.attributeValue("module");
+            if (Objects.equals(null, packageName) || packageName.endsWith("/")) continue;
             set.add(packageName);
         }
-        logger.info(String.valueOf(set.size()));
+        if (logger.isDebugEnabled()) {
+            logger.debug(xmlFilePath + " 解析后清单数目: " + set.size());
+        }
         return set;
     }
 
@@ -57,7 +60,7 @@ public class XmlUtil {
      *
      * @param list FileBlame
      */
-    public static void entity2XmlFile(List<FileBlame> list, String path, String patchFlag) {
+    public static void entity2XmlFile(List<FileBlame> list, String fileFullName) {
         Document document = DocumentHelper.createDocument();
         Element rootElement = document.addElement("files");
         Element descElement = rootElement.addElement("description");
@@ -77,7 +80,7 @@ public class XmlUtil {
                 commitEle.addElement("type").setText(commit.getType());
             }
         }
-        xmlWriter(document, true, path, patchFlag);
+        xmlWriter(document, true, fileFullName);
     }
 
     /**
@@ -86,7 +89,7 @@ public class XmlUtil {
      * @param rootElement 带有信息XML的Document
      * @param format      格式化标志
      */
-    private static void xmlWriter(Document rootElement, boolean format, String path, String patchFlag) {
+    private static void xmlWriter(Document rootElement, boolean format, String fileName) {
         // 输入格式化 XML
         OutputFormat formater = new OutputFormat();
         formater.setIndent(format);
@@ -94,9 +97,6 @@ public class XmlUtil {
         formater.setEncoding("utf-8");
 
         // 生成文件路径及文件名
-        String runDate = DateUtil.getRunDate();
-        path = path.endsWith(File.separator) ? path : path + File.separator;
-        String fileName = path + runDate + "_patchInfoList_" + patchFlag + ".xml";
         logger.info(fileName);
 
         // 开始写入到文件

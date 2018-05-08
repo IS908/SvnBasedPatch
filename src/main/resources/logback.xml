@@ -25,9 +25,12 @@
         </triggeringPolicy>
     </appender>
 
+    <logger name="com.dcits.patchtools.svn.PatchHandler" level="DEBUG" additivity="false">
+        <appender-ref ref="FILE"/>
+    </logger>
+
     <!-- 日志输出级别 -->
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
-        <appender-ref ref="FILE"/>
     </root>
 </configuration>

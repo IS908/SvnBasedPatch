@@ -32,9 +32,6 @@ public class SvnDao {
 
     @Setter
     @Getter
-    private String svnBaseUrl;
-    @Setter
-    @Getter
     private String svnUrl;
     @Setter
     @Getter
@@ -67,7 +64,7 @@ public class SvnDao {
                 }
             });
             // todo: 将最新的版本号写到md5(svnUrl)命名的文件中
-            logger.info("当前截止版本号为：" + currentVersion[0]);
+            logger.info("当前抽取增量版本号区间为：v" + versionFrom + " - v" + currentVersion[0]);
         } catch (SVNException e) {
             logger.info(e.getErrorMessage().getFullMessage());
         }
