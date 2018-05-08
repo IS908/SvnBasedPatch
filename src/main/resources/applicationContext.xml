@@ -38,12 +38,12 @@
     </bean>-->
 
     <bean id="patchHandler" class="com.dcits.patchtools.svn.PatchHandler">
-        <property name="yamlConf" ref="yamlMap"/>
         <property name="patchServices">
             <list>
                 <ref bean="patchService"/>
             </list>
         </property>
+        <property name="yamlConf" ref="yamlMap"/>
         <property name="yamlPath" value="${patch.yml.dir}"/>
         <property name="yamlSurfix" value="${patch.yml.surfix}"/>
         <property name="targetPath" value="${patch.target.dir}"/>

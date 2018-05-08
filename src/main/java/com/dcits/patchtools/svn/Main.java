@@ -1,7 +1,6 @@
 package com.dcits.patchtools.svn;
 
-import com.dcits.patchtools.svn.util.DateUtil;
-import com.dcits.patchtools.svn.util.SpringApplicationContext;
+import com.dcits.patchtools.svn.util.SpringContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -20,8 +19,8 @@ public class Main {
 
     private Main(String[] args) {
         ApplicationContext context = new ClassPathXmlApplicationContext("classpath*:applicationContext.xml");
-        SpringApplicationContext springApplicationContext = new SpringApplicationContext();
-        springApplicationContext.setApplicationContext(context);
+        SpringContext springContext = new SpringContext();
+        springContext.setApplicationContext(context);
     }
 
     /**
@@ -54,8 +53,9 @@ public class Main {
 
         new Main(args);
 
-        PatchHandler patchHandler = SpringApplicationContext
+        PatchHandler patchHandler = SpringContext
                 .getContext().getBean(PatchHandler.class);
+
         switch (execType) {
             case "xml":
                 patchHandler.patchListAndReport(baseDir, versionFrom, versionTo);
@@ -66,16 +66,8 @@ public class Main {
                 logger.info("增量部署包生成完成！");
                 break;
             default:
+                logger.warn("未知的参数！");
                 break;
         }
-
-
-        /*System.out.println();
-        Properties properties = System.getProperties();
-        System.out.println(properties.size());
-        for (Object o : properties.keySet()) {
-            System.out.println("" + o + "=" + properties.get(o));
-        }*/
     }
-
 }

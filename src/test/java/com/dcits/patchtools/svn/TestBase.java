@@ -1,6 +1,6 @@
 package com.dcits.patchtools.svn;
 
-import com.dcits.patchtools.svn.util.SpringApplicationContext;
+import com.dcits.patchtools.svn.util.SpringContext;
 import org.junit.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +20,7 @@ public class TestBase {
     @Before
     public void loadSpringApplicationContext() {
         this.context = new ClassPathXmlApplicationContext("classpath*:applicationContext.xml");
-        SpringApplicationContext applicationContext = new SpringApplicationContext();
+        SpringContext applicationContext = new SpringContext();
         applicationContext.setApplicationContext(context);
     }
 }

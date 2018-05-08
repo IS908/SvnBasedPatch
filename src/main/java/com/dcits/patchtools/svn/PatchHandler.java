@@ -3,21 +3,18 @@ package com.dcits.patchtools.svn;
 import com.dcits.patchtools.svn.service.PatchService;
 import com.dcits.patchtools.svn.util.DateUtil;
 import com.dcits.patchtools.svn.util.FileUtil;
+import com.dcits.patchtools.svn.util.YamlHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yaml.snakeyaml.Yaml;
 import org.zeroturnaround.zip.ZipUtil;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.*;
 
 /**
  * @author Kevin
  * @date 2018-05-08 09:18.
- * @desc
+ * @desc 增量抽取
  * @email chenkunh@dcits.com
  */
 public class PatchHandler {
@@ -73,7 +70,7 @@ public class PatchHandler {
         for (String prefix : yamls) {
             String yamlSource = baseDir.concat(yamlPath) + File.separator
                     + prefix.concat(yamlSurfix).concat(".yml");
-            yamlPaser(yamlSource, patchSet, matchSet, deleteSet);
+            YamlHelper.yamlPaser(yamlSource, patchSet, matchSet, deleteSet);
         }
 
         if (logger.isDebugEnabled()) {
@@ -92,19 +89,17 @@ public class PatchHandler {
         File insTmpDir = new File(baseDir + tmpDir);
         File insAppDir = new File(insTmpDir.getAbsolutePath() + "/" + patchFolderName);
         if (insTmpDir.exists()) {
-            logger.info("delete ：" + insTmpDir.getAbsolutePath());
-            insTmpDir.delete();
+            logger.info("删除目录 ：" + insTmpDir.getAbsolutePath());
+//            insTmpDir.delete();
+            FileUtil.deleteDir(insTmpDir);
         }
         insTmpDir.mkdir();
         insAppDir.mkdir();
 
         // 复制部署包增量文件目录结构
-        logger.info("mkdir :" + insTmpDir.getAbsolutePath());
-        try {
-            FileUtil.copyFolder(new File(baseDir + targetSrcPath), insAppDir);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        logger.info("复制目录结构到 :" + insTmpDir.getAbsolutePath());
+        FileUtil.copyFolder(new File(baseDir + targetSrcPath), insAppDir);
+
         // 移动具体文件的增量文件到临时存放目录
         FileUtil.mvFile(baseDir + targetSrcPath, insAppDir.getPath(), patchSet);
 
@@ -144,61 +139,6 @@ public class PatchHandler {
         ZipUtil.pack(new File(baseDir + tmpDir), new File(baseDir + zipName));
 
         return res;
-    }
-
-    /**
-     * yaml文件解析，解析提交文件列表
-     *
-     * @param filePath
-     * @param matchPatchSet
-     * @param deletePatchSet
-     */
-    private void yamlPaser(String filePath, Set<String> specificFileSet,
-                           Set<String> matchPatchSet, Set<String> deletePatchSet) {
-        logger.info(filePath);
-        Yaml yaml = new Yaml();
-        File ymlFile = new File(filePath);
-        if (ymlFile.exists()) {
-            try {
-                HashMap<String, List<String>> map = yaml.loadAs(new FileInputStream(ymlFile), HashMap.class);
-                List<String> deleteFiles = map.get("deleteFile");
-                List<String> matchFiles = map.get("matchFile");
-
-                if (!Objects.equals(deleteFiles, null)) {
-                    logger.info("deleteFile:" + deleteFiles.toString());
-                    for (String tmp : deleteFiles) deletePatchSet.add(tmp);
-                }
-                if (!Objects.equals(matchFiles, null)) {
-                    logger.info("matchFile:" + matchFiles.toString());
-                    for (String tmp : matchFiles) {
-                        if (!tmp.endsWith("*")) {
-                            specificFileSet.add(tmp);
-                        } else if (this.pathPattern(tmp)) {
-                            matchPatchSet.add(tmp);
-                            deletePatchSet.add(tmp);
-                        }
-                    }
-                }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        } else {
-            logger.warn("=================!!!!!未找到" + ymlFile.getName() +
-                    "文件!!!!!=================");
-        }
-    }
-
-    /**
-     * 模糊路径匹配规则校验
-     *
-     * @param path 带校验路径
-     * @return
-     */
-    private boolean pathPattern(String path) {
-        if (!path.endsWith("*")) return false;
-        String[] paths = path.split("/");
-        String str = paths[paths.length - 1];
-        return !Objects.equals(str.substring(0, 1), "*");
     }
 
     public String getYamlPath() {

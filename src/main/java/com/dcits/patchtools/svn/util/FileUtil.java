@@ -24,11 +24,10 @@ public class FileUtil {
      * @param dest
      * @throws IOException
      */
-    public static void copyFolder(File src, File dest) throws IOException {
+    public static void copyFolder(File src, File dest) {
         if (!src.isDirectory()) return;
-        if (!dest.exists()) {
-            dest.mkdir();
-        }
+        if (!dest.exists()) dest.mkdir();
+
         String files[] = src.list();
         for (String file : files) {
             File srcFile = new File(src, file);
@@ -39,6 +38,8 @@ public class FileUtil {
     }
 
     /**
+     * 模糊匹配文件迁移
+     *
      * @param baseDir
      * @param matchSet
      * @return
@@ -103,7 +104,6 @@ public class FileUtil {
 
         return new FilenameFilter() {
             private Pattern pattern = Pattern.compile(regex);
-
             @Override
             public boolean accept(File dir, String name) {
                 return pattern.matcher(name).matches();
@@ -190,5 +190,19 @@ public class FileUtil {
         } catch (Exception e) {
             logger.info(e.getMessage() + " : " + e.getCause());
         }
+    }
+
+    /**
+     * 删除一个目录（若目录非空，则递归删除其子目录及文件）
+     *
+     * @param dir
+     */
+    public static void deleteDir(File dir) {
+        if (dir.isDirectory()) {
+            File[] files = dir.listFiles();
+            for (int i = 0; i < files.length; i++)
+                deleteDir(files[i]);
+        }
+        dir.delete();
     }
 }

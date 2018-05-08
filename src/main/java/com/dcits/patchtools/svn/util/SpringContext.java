@@ -14,12 +14,12 @@ import org.springframework.context.ApplicationContextAware;
  * @desc 自定义存放ApplicationContext，便于随时获取bean
  * @email chenkunh@dcits.com
  */
-public class SpringApplicationContext implements ApplicationContextAware, BeanFactoryPostProcessor {
-    private static final Logger logger = LoggerFactory.getLogger(SpringApplicationContext.class);
+public class SpringContext implements ApplicationContextAware, BeanFactoryPostProcessor {
+    private static final Logger logger = LoggerFactory.getLogger(SpringContext.class);
 
     private static ApplicationContext context;
 
-    public SpringApplicationContext() {
+    public SpringContext() {
     }
 
     @Override

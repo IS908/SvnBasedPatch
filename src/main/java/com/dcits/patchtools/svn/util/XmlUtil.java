@@ -24,11 +24,6 @@ import java.util.*;
 public class XmlUtil {
     private static final Logger logger = LoggerFactory.getLogger(XmlUtil.class);
 
-    public static boolean writer(Map<String, List<FileBlame>> map, String path) {
-
-        return false;
-    }
-
     /**
      * 读取增量描述文件，筛选出确认上版本的增量文件列表
      *
@@ -119,6 +114,7 @@ public class XmlUtil {
      * @param pomPath pom文件路径
      * @return 打包后的包名
      */
+    @Deprecated
     public static String pom2PackageName(String pomPath) {
         Document document = xmlReader(pomPath);
         return XmlUtil.pom2PackageName(document);
