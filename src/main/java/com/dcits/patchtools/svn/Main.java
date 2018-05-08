@@ -60,7 +60,6 @@ public class Main {
             case "xml":
                 patchHandler.patchListAndReport(baseDir, versionFrom, versionTo);
                 logger.info("送测清单、增量描述文件生成完成！");
-                patchHandler.patchExecute(baseDir, versionFrom, versionTo, ymlPrefix);
                 break;
             case "zip":
                 patchHandler.patchExecute(baseDir, versionFrom, versionTo, ymlPrefix);
