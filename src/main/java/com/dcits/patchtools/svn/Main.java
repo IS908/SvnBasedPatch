@@ -17,7 +17,7 @@ import java.io.File;
 public class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
-    private Main(String[] args) {
+    private Main() {
         ApplicationContext context = new ClassPathXmlApplicationContext("classpath*:applicationContext.xml");
         SpringContext springContext = new SpringContext();
         springContext.setApplicationContext(context);
@@ -51,10 +51,15 @@ public class Main {
         long versionTo = -1;
         if (argsCount == 5) versionTo = Long.valueOf(args[4]);
 
-        new Main(args);
+        ApplicationContext context = new ClassPathXmlApplicationContext("classpath*:applicationContext.xml");
+
+        PatchHandler patchHandler = context.getBean(PatchHandler.class);
+
+        /*SpringContext springContext = new SpringContext();
+        springContext.setApplicationContext(context);
 
         PatchHandler patchHandler = SpringContext
-                .getContext().getBean(PatchHandler.class);
+                .getContext().getBean(PatchHandler.class);*/
 
         switch (execType) {
             case "xml":

@@ -14,6 +14,7 @@ pathConvert:
     /modelBank-all-integration/src/main/config/: conf/
     /modelBank-all-integration/src/main/scripts/: bin/
     /src/main/java/: lib/
+    /src/main/config/: lib/
     /src/main/resources: lib/
   # 前缀路径匹配
 #  prefix:
@@ -26,8 +27,10 @@ pathExclued:
   specific:
   contains:
     - /src/test/
+    - /src/main/rules/META-INF/
   prefix:
   surfix:
+    - assembly.xml
     - .txt
     - .bak
     - .sql
@@ -57,5 +60,19 @@ pathExclued:
 listOnly:
   specific:
   contains:
+    - /src/main/config/ext/
+    - /src/main/config/business/
   prefix:
-  surfix: [.sh, .bat, .properties]
+  surfix: [.sh, .bat, .properties, logback.xml]
+
+# 指定目录下全量抽取（仅抽取文件，不递归子目录）
+# (1) 源目录抽取到指定目标目录：
+#   srcFolder：destFolder
+patchFull:
+  conf/busiRule: conf/busiRule
+  conf/check: conf/check
+  conf/checkRule: conf/checkRule
+  conf/dbRule: conf/dbRule
+  conf/mapping: conf/mapping
+  conf/trace: conf/trace
+
