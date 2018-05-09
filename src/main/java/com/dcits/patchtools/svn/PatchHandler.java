@@ -100,14 +100,17 @@ public class PatchHandler {
         logger.info("复制目录结构到 :" + insTmpDir.getAbsolutePath());
         FileUtil.copyFolder(new File(baseDir + targetSrcPath), insAppDir);
 
+/*
         // 移动具体文件的增量文件到临时存放目录
-        FileUtil.mvFile(baseDir + targetSrcPath, insAppDir.getPath(), patchSet);
+        FileUtil.mvFiles(baseDir + targetSrcPath, insAppDir.getPath(), patchSet);
+*/
 
+        matchSet.addAll(patchSet);
         // 移动模糊匹配文件到临时存放目录
         FileUtil.mvMatchFiles(baseDir,
                 targetSrcPath,
                 targetPath.concat("/").concat(patchTmpFolderName).concat("/").concat(patchFolderName),
-                matchSet);
+                matchSet, deleteSet);
 
         // 指定文件夹下的文件全部抽取（不递归子目录）
         Object patchFullObj = yamlConf.get("patchFull");
@@ -118,7 +121,7 @@ public class PatchHandler {
                 Map.Entry<String, String> entry = iterator.next();
                 String key = entry.getKey();
                 String value = entry.getValue();
-                FileUtil.mvFile(baseDir,
+                FileUtil.mvFiles(baseDir,
                         targetSrcPath.concat("/").concat(key),
                         targetPath
                                 .concat("/").concat(patchTmpFolderName)
@@ -134,7 +137,7 @@ public class PatchHandler {
                 + delFileName;
         FileUtil.writeFile(delFileDir, deleteSet);
 
-        // 生成增量部署自评包
+        // 生成增量部署zip包
         String zipName = targetPath + "/" + patchZipName;
         ZipUtil.pack(new File(baseDir + tmpDir), new File(baseDir + zipName));
 

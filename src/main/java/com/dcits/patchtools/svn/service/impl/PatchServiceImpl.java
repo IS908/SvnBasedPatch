@@ -48,6 +48,8 @@ public class PatchServiceImpl implements PatchService {
     private String xmlModuleSurfix;
     @Value("${patch.excel.dir}")
     private String excelDir;
+    @Value("${mvn.snapshot.timestamp}")
+    private boolean snapshotTimestamp;
 
     private static final String SRC_MAIN = "/src/main/";
     private static final String RESOURCES = SRC_MAIN + "resources/";
@@ -175,7 +177,7 @@ public class PatchServiceImpl implements PatchService {
         }
         try {
             ByteArrayOutputStream baos = svnService.getFileFromSVN(pomPath);
-            moduleName = XmlUtil.pom2PackageName(baos);
+            moduleName = XmlUtil.pom2PackageName(baos, snapshotTimestamp);
             fileBlame.setModule(moduleName);
             moduleMap.put(pomPath, moduleName);
         } catch (SVNException e) {
@@ -209,4 +211,11 @@ public class PatchServiceImpl implements PatchService {
         this.xmlModuleSurfix = xmlModuleSurfix;
     }
 
+    public boolean isSnapshotTimestamp() {
+        return snapshotTimestamp;
+    }
+
+    public void setSnapshotTimestamp(boolean snapshotTimestamp) {
+        this.snapshotTimestamp = snapshotTimestamp;
+    }
 }

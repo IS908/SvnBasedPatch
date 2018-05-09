@@ -111,29 +111,17 @@ public class XmlUtil {
     /**
      * 读取pom文件获得该pom文件对应的打包后的文件名
      *
-     * @param pomPath pom文件路径
-     * @return 打包后的包名
-     */
-    @Deprecated
-    public static String pom2PackageName(String pomPath) {
-        Document document = xmlReader(pomPath);
-        return XmlUtil.pom2PackageName(document);
-    }
-
-    /**
-     * 读取pom文件获得该pom文件对应的打包后的文件名
-     *
      * @param baos pom文件内容
      * @return 打包后的包名
      */
-    public static String pom2PackageName(ByteArrayOutputStream baos) {
+    public static String pom2PackageName(ByteArrayOutputStream baos, boolean regexTimestamp) {
         String pkgName = null;
         ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
         SAXReader reader = new SAXReader();
         reader.setEncoding("utf-8");
         try {
             Document document = reader.read(bais);
-            pkgName = pom2PackageName(document);
+            pkgName = pom2PackageName(document, regexTimestamp);
             baos.close();
         } catch (DocumentException e) {
             logger.error(e.getMessage());
@@ -149,9 +137,10 @@ public class XmlUtil {
      * pom文件解析
      *
      * @param document
+     * @param regexTimestamp 快照版的时间戳模糊匹配
      * @return
      */
-    private static String pom2PackageName(Document document) {
+    private static String pom2PackageName(Document document, boolean regexTimestamp) {
         Element root = document.getRootElement();
 
         Element packaging = root.element("packaging");
@@ -164,7 +153,10 @@ public class XmlUtil {
             version = parent.element("version");
         }
 
-        return (artifactId.getText() + "-" + version.getText() + "." + pkgType);
+        String jarName = artifactId.getText() + "-" + version.getText() + "." + pkgType;
+        if (regexTimestamp) jarName = jarName.replaceAll("SNAPSHOT", "*");
+
+        return jarName;
     }
 
     /**

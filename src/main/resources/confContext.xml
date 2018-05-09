@@ -18,6 +18,7 @@
         <property name="xmlDir" value="${patch.xml.dir}"/>
         <property name="xmlModuleSurfix" value="${patch.xml.surfix}"/>
         <property name="excelDir" value="${patch.excel.dir}"/>
+        <property name="snapshotTimestamp" value="${mvn.snapshot.timestamp}"/>
     </bean>
     <!-- 示例配置End -->
 </beans>
