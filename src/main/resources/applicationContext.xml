@@ -11,35 +11,23 @@
     <context:property-placeholder location="classpath*:svn.properties"/>
     <context:component-scan base-package="com.dcits.patchtools.svn"/>
 
+    <import resource="classpath*:confContext.xml"/>
+
     <!-- 加载规则文件 -->
     <bean id="yamlMap" class="org.springframework.beans.factory.config.YamlMapFactoryBean">
         <property name="resources" value="classpath*:patchRule.yml"/>
     </bean>
+
     <!-- 规则类加载 -->
-    <!--<bean id="pathRuleService" class="com.dcits.patchtools.svn.service.impl.PathRuleServiceImpl">
+    <bean id="pathRuleService" class="com.dcits.patchtools.svn.service.impl.PathRuleServiceImpl">
         <property name="yamlMap" ref="yamlMap"/>
-    </bean>-->
-
-    <!-- 以下为根据 -->
-    <bean id="svnDao" class="com.dcits.patchtools.svn.dao.SvnDao">
-        <property name="svnUrl" value="${svn.url}"/>
-        <property name="user" value="${svn.username}"/>
-        <property name="pwd" value="${svn.password}"/>
     </bean>
-    <!--<bean id="svnService" class="com.dcits.patchtools.svn.service.impl.SvnServiceImpl">
-        <property name="svnDao" ref="svnDao"/>
-    </bean>-->
-    <!--<bean id="patchService" class="com.dcits.patchtools.svn.service.impl.PatchServiceImpl">
-        <property name="svnService" ref="svnService"/>
-        <property name="pathRuleService" ref="pathRuleService"/>
-        <property name="xmlDir" value="${patch.xml.dir}"/>
-        <property name="xmlModuleSurfix" value="${patch.xml.surfix}"/>
-        <property name="excelDir" value="${patch.excel.dir}"/>
-    </bean>-->
 
+    <!-- 分发执行配置 -->
     <bean id="patchHandler" class="com.dcits.patchtools.svn.PatchHandler">
         <property name="patchServices">
             <list>
+                <!-- 当有多套svn地址，每一套PatchService的id在此注册 -->
                 <ref bean="patchService"/>
             </list>
         </property>
