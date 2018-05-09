@@ -93,7 +93,7 @@ applicationContext.xml配置，当配置多套时需将每一套的PatchService�
     </property>
 ````
 
-规则配置patchRule.yml相关配置：
+规则文件patchRule.yml相关配置：
 ````yaml
 # 增量抽取需求：
 # 1、生成增量包的同时，生成Excel的增量清单
