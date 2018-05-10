@@ -44,11 +44,18 @@ public class FileUtil {
      * @param matchSet
      * @return
      */
-    public static void mvMatchFiles(String baseDir, String targetSrc,
-                                    String targetDest, Set<String> matchSet) {
+    public static void mvMatchFiles(String baseDir, String targetSrc, String targetDest,
+                                    Set<String> matchSet, Set<String> deleteSet) {
         StringBuffer bufferSrc = new StringBuffer();
         StringBuffer bufferDest = new StringBuffer();
         for (String matchStr : matchSet) {
+            if (!(matchStr.endsWith("*") || matchStr.endsWith("*.jar"))){
+                // 执行精确匹配，剪切文件
+                mvFile(baseDir + targetSrc, baseDir + targetDest, matchStr);
+                continue;
+            }
+            deleteSet.add(matchStr);
+
             String[] tmpStr = matchStr.split("/");
             bufferSrc.setLength(0);
             bufferSrc.append(baseDir).append(targetSrc);
@@ -68,7 +75,7 @@ public class FileUtil {
             if (!srcFolder.exists() || srcFolder.isFile()) continue;
 
             String matchTmp = tmpStr[tmpStr.length - 1];
-            matchTmp = matchTmp.substring(0, matchTmp.length() - 1);
+            matchTmp = matchTmp.substring(0, matchTmp.indexOf('*'));
 
             File[] listFiles = srcFolder.listFiles();
             if (Objects.equals(null, listFiles) || listFiles.length < 1) continue;
@@ -112,13 +119,13 @@ public class FileUtil {
     }
 
     /**
-     * 复制给定文件列表中的文件到指定目录
+     * 剪切给定文件列表中的文件到指定目录
      *
      * @param src
      * @param dest
      * @param set  待移动文件相对路径
      */
-    public static void mvFile(String src, String dest, Set<String> set) {
+    public static void mvFiles(String src, String dest, Set<String> set) {
         src += src.endsWith(File.separator) ? "" : File.separator;
         dest += dest.endsWith(File.separator) ? "" : File.separator;
         logger.info("源目录：" + src);
@@ -133,13 +140,29 @@ public class FileUtil {
     }
 
     /**
+     * 剪切单个文件
+     *
+     * @param srcDir
+     * @param destDir
+     * @param relativePath
+     */
+    public static void mvFile(String srcDir, String destDir, String relativePath) {
+        srcDir += srcDir.endsWith(File.separator) ? "" : File.separator;
+        destDir += destDir.endsWith(File.separator) ? "" : File.separator;
+        File file = new File(srcDir + relativePath);
+        if (!file.exists()) return;
+        file.renameTo(new File(destDir + relativePath));
+    }
+
+
+    /**
      * 移动指定文件夹下所有文件到目标文件夹下（不递归子目录）
      *
      * @param baseDir
      * @param srcForder
      * @param destFolder
      */
-    public static void mvFile(String baseDir, String srcForder, String destFolder) {
+    public static void mvFiles(String baseDir, String srcForder, String destFolder) {
         srcForder = baseDir + srcForder + (srcForder.endsWith(File.separator) ? "" : File.separator);
         destFolder = baseDir + destFolder + (destFolder.endsWith(File.separator) ? "" : File.separator);
         File srcFile = new File(srcForder);
@@ -159,7 +182,7 @@ public class FileUtil {
      * @param srcFiles 源文件句柄集合
      * @param dest     目标目录
      */
-    public static void mvFile(Set<File> srcFiles, String dest) {
+    public static void mvFiles(Set<File> srcFiles, String dest) {
         for (File f : srcFiles) {
             if (!f.exists()) continue;
             logger.info("抽取文件：" + f.getName());
