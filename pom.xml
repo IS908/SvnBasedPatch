@@ -18,7 +18,7 @@
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
         <!--<spring.version>3.2.13.RELEASE</spring.version>-->
-        <spring.version>4.3.13.RELEASE</spring.version>
+        <spring.version>4.3.11.RELEASE</spring.version>
         <svnkit.version>1.9.0</svnkit.version>
         <dom4j.version>1.6.1</dom4j.version>
         <logback.version>1.2.3</logback.version>
