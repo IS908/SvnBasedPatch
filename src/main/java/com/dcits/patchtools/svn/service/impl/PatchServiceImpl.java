@@ -13,11 +13,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 import org.tmatesoft.svn.core.SVNException;
 
-import javax.annotation.Resource;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.*;
@@ -28,32 +25,26 @@ import java.util.*;
  * @desc
  * @email chenkunh@dcits.com
  */
-@Service("patchService")
 public class PatchServiceImpl implements PatchService {
     private static final Logger logger = LoggerFactory.getLogger(PatchServiceImpl.class);
 
-    @Resource
     @Setter
     @Getter
     private PathRuleService pathRuleService;
 
-    @Resource
     @Setter
     @Getter
     private SvnService svnService;
 
-    @Value("${patch.xml.dir}")
     private String xmlDir;
-    @Value("${patch.xml.surfix}")
     private String xmlModuleSurfix;
-    @Value("${patch.excel.dir}")
     private String excelDir;
-    @Value("${mvn.snapshot.timestamp}")
     private boolean snapshotTimestamp;
 
     private static final String SRC_MAIN = "/src/main/";
     private static final String RESOURCES = SRC_MAIN + "resources/";
     private static final String JAVA = SRC_MAIN + "java/";
+    private static final String WEBAPP = SRC_MAIN + "webapp/";
 
     @Override
     public boolean genPatchListAndReport(String baseDir, long versionFrom, long versionTo) {
@@ -114,6 +105,12 @@ public class PatchServiceImpl implements PatchService {
 
             // 规则：module值转换规则执行
             pathRuleService.pathConvert(fileBlame);
+            if (srcPath.contains(WEBAPP)) {
+                String[] tmpStrs = srcPath.split(WEBAPP);
+                String moduleName = tmpStrs[tmpStrs.length - 1];
+                fileBlame.setModule(WEBAPP + moduleName);
+                fileBlame.setPkgPath(WEBAPP + moduleName);
+            }
 
             fileBlameList.add(fileBlame);
         }

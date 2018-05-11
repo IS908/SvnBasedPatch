@@ -7,13 +7,11 @@ import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNLogEntry;
 import org.tmatesoft.svn.core.SVNLogEntryPath;
 import org.tmatesoft.svn.core.SVNNodeKind;
 
-import javax.annotation.Resource;
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -24,11 +22,9 @@ import java.util.*;
  * @desc
  * @email chenkunh@dcits.com
  */
-@Component("svnService")
 public class SvnServiceImpl implements SvnService {
     private static final Logger logger = LoggerFactory.getLogger(SvnServiceImpl.class);
 
-    @Resource
     @Setter
     @Getter
     private SvnDao svnDao;
