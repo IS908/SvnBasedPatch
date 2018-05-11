@@ -8,8 +8,9 @@ pathConvert:
   specific:
   # 包含路径匹配
   contains:
-    /modelBank-all-integration/src/main/config/: conf/
-    /modelBank-all-integration/src/main/scripts/: bin/
+    /src/main/config/: conf/
+    /src/main/scripts/: bin/
+    /src/main/webapp/: webapp/
     /src/main/java/: lib/
     /src/main/config/: lib/
     /src/main/resources: lib/

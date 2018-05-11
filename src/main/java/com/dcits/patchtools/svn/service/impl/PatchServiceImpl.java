@@ -44,6 +44,7 @@ public class PatchServiceImpl implements PatchService {
     private static final String SRC_MAIN = "/src/main/";
     private static final String RESOURCES = SRC_MAIN + "resources/";
     private static final String JAVA = SRC_MAIN + "java/";
+    private static final String WEBAPP = SRC_MAIN + "webapp/";
 
     @Override
     public boolean genPatchListAndReport(String baseDir, long versionFrom, long versionTo) {
@@ -104,6 +105,12 @@ public class PatchServiceImpl implements PatchService {
 
             // 规则：module值转换规则执行
             pathRuleService.pathConvert(fileBlame);
+            if (srcPath.contains(WEBAPP)) {
+                String[] tmpStrs = srcPath.split(WEBAPP);
+                String moduleName = tmpStrs[tmpStrs.length - 1];
+                fileBlame.setModule(WEBAPP + moduleName);
+                fileBlame.setPkgPath(WEBAPP + moduleName);
+            }
 
             fileBlameList.add(fileBlame);
         }
