@@ -28,27 +28,20 @@ import java.util.*;
  * @desc
  * @email chenkunh@dcits.com
  */
-@Service("patchService")
 public class PatchServiceImpl implements PatchService {
     private static final Logger logger = LoggerFactory.getLogger(PatchServiceImpl.class);
 
-    @Resource
     @Setter
     @Getter
     private PathRuleService pathRuleService;
 
-    @Resource
     @Setter
     @Getter
     private SvnService svnService;
 
-    @Value("${patch.xml.dir}")
     private String xmlDir;
-    @Value("${patch.xml.surfix}")
     private String xmlModuleSurfix;
-    @Value("${patch.excel.dir}")
     private String excelDir;
-    @Value("${mvn.snapshot.timestamp}")
     private boolean snapshotTimestamp;
 
     private static final String SRC_MAIN = "/src/main/";

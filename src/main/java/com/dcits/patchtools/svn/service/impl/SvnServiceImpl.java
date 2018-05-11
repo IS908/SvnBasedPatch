@@ -24,11 +24,9 @@ import java.util.*;
  * @desc
  * @email chenkunh@dcits.com
  */
-@Component("svnService")
 public class SvnServiceImpl implements SvnService {
     private static final Logger logger = LoggerFactory.getLogger(SvnServiceImpl.class);
 
-    @Resource
     @Setter
     @Getter
     private SvnDao svnDao;
